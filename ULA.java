@@ -54,15 +54,20 @@ public class ULA {
         switch (sinalControle){
             case 0:
                 resultado = (valorA+valorB)&MASK;
+                break;
             case 1:
                 resultado = (valorA&valorB);
+                break;
             case 2:
                 resultado = valorA;
+                break;
             case 3:
                 resultado = (~valorA)&MASK;
+                break;
             default:
                 System.out.println("Operação inválida na ULA");
                 resultado=0;
+                break;
         }
 
         this.saida=resultado;
