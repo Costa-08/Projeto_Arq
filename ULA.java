@@ -9,26 +9,27 @@
 
 public class ULA {
     
-    private int valorA;
-    private int valorB;
     private int sinalControle;
 
+    private final Latch latch1;
+    private final Latch latch2;
+
     private static final int MASK = 0xFFFF;
-
-
-    public void setValorA(int novoValor){
-        valorA=novoValor&MASK;
-    }
-
-    public void setValorB(int novoValor){
-        valorB=novoValor&MASK;
+    
+    public ULA(Latch latch1, Latch latch2){
+        this.latch1=latch1;
+        this.latch2=latch2;
     }
 
     public void setSinalControle(int novoValor){
-        valorB=novoValor&7;
+        sinalControle=novoValor&7;
     }
 
     private int operacao(){
+        
+        int valorA=latch1.getValor();
+        int valorB=latch2.getValor();
+
         switch (sinalControle){
             case 0:
                 return (valorA+valorB)&MASK;
