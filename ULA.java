@@ -9,44 +9,65 @@
 
 public class ULA {
     
-    private int sinalControle;
-
     private final Latch latch1;
     private final Latch latch2;
 
-    private static final int MASK = 0xFFFF;
-    
     public ULA(Latch latch1, Latch latch2){
         this.latch1=latch1;
         this.latch2=latch2;
     }
 
+
+
+    private int sinalControle;
+
     public void setSinalControle(int novoValor){
-        sinalControle=novoValor&7;
+        sinalControle=novoValor&3;
     }
 
-    private int operacao(){
+    
+    
+    private static final int MASK = 0xFFFF;
+
+    private int saida;
+    private boolean Zflag;
+    private boolean Nflag;
+    
+    public int getSaida(){
+        return saida&MASK;
+    }
+
+    public boolean getZflag(){
+        return Zflag;
+    }
+
+    public boolean getNflag(){
+        return Nflag;
+    }
+
+    private void operacao(){
         
         int valorA=latch1.getValor();
         int valorB=latch2.getValor();
+        int resultado;
 
         switch (sinalControle){
             case 0:
-                return (valorA+valorB)&MASK;
+                resultado = (valorA+valorB)&MASK;
             case 1:
-                return (valorA&valorB);
+                resultado = (valorA&valorB);
             case 2:
-                return valorA;
+                resultado = valorA;
             case 3:
-                return (~valorA)&MASK;
+                resultado = (~valorA)&MASK;
             default:
-                System.out.println("Operação inválida dentro da ULA");
-                return 1;
+                System.out.println("Operação inválida na ULA");
+                resultado=0;
         }
-    }
 
-    public int getResultULA(){
-        return operacao();
+        this.saida=resultado;
+        this.Zflag=(resultado==0);
+        this.Nflag=(resultado<0);
     }
 
 }
