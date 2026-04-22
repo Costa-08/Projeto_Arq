@@ -27,6 +27,11 @@ public class Main {
         
         // Inicializando os registradores
         Registrador[] registradores = new Registrador[16];
+
+        for (int i=0; i<16; i++){
+            registradores[i]=new Registrador();
+        }
+        
         registradores[2].recebeValor(2048);
         registradores[5].recebeValor(0);
         registradores[6].recebeValor(1);
