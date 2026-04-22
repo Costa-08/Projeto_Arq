@@ -27,17 +27,15 @@ public class Main {
         
         // Inicializando os registradores
         Registrador[] registradores = new Registrador[16];
-        registradores[2].setValor(2048);
-        registradores[5].setValor(0);
-        registradores[6].setValor(1);
-        registradores[7].setValor(-1);
-        registradores[8].setValor(0x0FFF);
-        registradores[9].setValor(0x00FF);
+        registradores[2].recebeValor(2048);
+        registradores[5].recebeValor(0);
+        registradores[6].recebeValor(1);
+        registradores[7].recebeValor(-1);
+        registradores[8].recebeValor(0x0FFF);
+        registradores[9].recebeValor(0x00FF);
         
         //inicializando resto
-        Latch LatchA = new Latch();
-        Latch LatchB= new Latch();
-        ULA ula = new ULA(LatchA, LatchB);
+
 
         
 

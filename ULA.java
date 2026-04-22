@@ -9,46 +9,32 @@
 
 public class ULA {
     
-    private final Latch latch1;
-    private final Latch latch2;
+    // Referencia aos Latches 
 
-    public ULA(Latch latch1, Latch latch2){
-        this.latch1=latch1;
-        this.latch2=latch2;
-    }
-
-
-
+    private int valorAmux;
+    private int valorBusB;
     private int sinalControle;
-
-    public void setSinalControle(int novoValor){
-        sinalControle=novoValor&3;
-    }
-
-    
-    
-    private static final int MASK = 0xFFFF;
-
     private int saida;
     private boolean Zflag;
     private boolean Nflag;
+    private static final int MASK = 0xFFFF;
+
+    public void recebeAmux(int valor){
+        this.valorAmux=valor;
+    }
+
+    public void recebeBusB(int valor){
+        this.valorBusB=valor;
+    }
     
-    public int getSaida(){
-        return saida&MASK;
-    }
-
-    public boolean getZflag(){
-        return Zflag;
-    }
-
-    public boolean getNflag(){
-        return Nflag;
-    }
-
-    private void operacao(){
+    public void recebeSinalControle(int novoValor){
+        sinalControle=novoValor&3;
+    }    
+    
+    public void operacao(){
         
-        int valorA=latch1.getValor();
-        int valorB=latch2.getValor();
+        int valorA=valorAmux;
+        int valorB=valorBusB;
         int resultado;
 
         switch (sinalControle){
@@ -70,4 +56,23 @@ public class ULA {
         this.Nflag=(resultado<0);
     }
 
+    public void enviaSaida(Shifter obj){
+        operacao();
+        obj.recebeULA(saida);
+    }
+
+    public boolean getZflag(){
+        return Zflag;
+    }
+
+    public boolean getNflag(){
+        return Nflag;
+    }
+
 }
+
+/*
+
+falta logica para enviar Zflag e Nflag para Micro Seq Logic
+
+*/

@@ -16,16 +16,14 @@ public class Registrador {
         this.valor=0;
     }
 
-    public void setValor(int novoValor){
+    public void recebeValor(int novoValor){
         this.valor=novoValor&MASK;
     }
 
-    public int getValor(){
-        return this.valor;
+    public void enviaValor(Barramento bus){
+        bus.recebeValor(valor);
     }
 
-    public short getValorValorado(){
-        return (short)this.valor;
-    }
+
 
 }

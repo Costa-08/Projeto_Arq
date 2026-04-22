@@ -1,0 +1,17 @@
+Criei o txt somente para explicar algumas escolhas que eu tomei, porém que valem para todos os arquivos e ficar copiando e colando não me parece uma boa ideia.
+
+Para a nomenclatura dos métodos, escolhi trocar os clássicos getters and setters 
+para recebe"s" e envia"s" para facilitar a compreensão e a escrita do código.
+
+Na dinâmica dos métodos e campos dentro dos objetos. Em um objeto X, coloquei campos privates, 
+sendo alguns de dados de entrada e outros de saida. Os de entrada com métodos Recebe que serão usados 
+em outros objetos y para enviar dados para o X, e os de saída com os métodos envia direto para o objeto
+destino, utilizando o recebe deste. Acredito que seria possível fazer o inverso e colocar a complexidade
+no recebimento, mas amarrar as coisas no envio me pareceu mais natural na hora de escrever.
+
+Ainda sobre a dinâmica entre os objetos, preferi tratar as conexões explicitamente no método de envio,
+ao passar como parâmetro o objeto de destino. A alternativa seria passar o objeto de destino como parâmetro
+no construtor do objeto, mas achei que ficaria excessivamente complicada a inicialização de todos os objetos.
+
+A lógica dos últimos dois parágrafos funcionou muito bem para a ULA, o Amux e o Shifter, talvez para a parte 
+dos barramentos e dos latches outra abordagem seja melhor.
