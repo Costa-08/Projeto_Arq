@@ -1,0 +1,113 @@
+Criei o txt somente para explicar algumas escolhas que eu tomei, porém que valem para todos os arquivos e ficar copiando e colando não me parece uma boa ideia.
+
+Para a nomenclatura dos métodos, escolhi trocar os clássicos getters and setters 
+para recebe"s" e envia"s" para facilitar a compreensão e a escrita do código.
+
+Na dinâmica dos métodos e campos dentro dos objetos. Em um objeto X, coloquei campos privates, 
+sendo alguns de dados de entrada e outros de saida. Os de entrada com métodos Recebe que serão usados 
+em outros objetos y para enviar dados para o X, e os de saída com os métodos envia direto para o objeto
+destino, utilizando o recebe deste. Acredito que seria possível fazer o inverso e colocar a complexidade
+no recebimento, mas amarrar as coisas no envio me pareceu mais natural na hora de escrever.
+
+
+Exemplos de microinstruções:
+
+00000000000100010110000100000000 Ac=Ac+1
+00000000000100011001000100000000 Ac=Ac+SMASK
+00000000000111111001100000000000 f = SMASK+AMASK
+00000010000111111001100000000000 f = (SMASK+AMASK) << 2
+00000100000111011001100000000000 d = (SMASK+AMASK) >> 2
+
+Modelo de microinstrução:
+
+AMUX COND ULA SHIFT MBR MAR RD WR ENC C    B    A    ADDR
+0    00   00  00    0   0   0  0  0   0000 0000 0000 00000000
+
+0    00   10  00    0   0   0  0  1   0011 0000 0110 00000000
+ir:=1
+
+Explicações sobre o funcionamento da interpretação de uma única microinstrução:
+
+- Preliminares:
+
+    Existem dois comportamentos que acontecem em hardware, mas não igual em software e que eu 
+    precisei modelar de uma maneira talvez não tão intuitiva, eles são:
+
+    *Paralelismo:
+        Existem processos que ocorrem ao mesmo tempo dentro do processador, como por exemplo, o 
+        envio dos dados dos registradores para os barramentos, porém em software algo tem que
+        acontecer antes do outro, por isso no código algumas coisas serão feitas em X ordem ou 
+        de Y maneira para tudo funcionar. (explicarei esses Xs e Ys nos subciclos)
+
+    Continuidade:
+        Os sinais de controle são contínuos durante todo o ciclo, porém se eu fizesse um método
+        enviaSinalControle que fosse contínuo, o código quebraria, por isso resolvi deixar cada
+        sinal de controle como um campo dentro das classes, para poder ser consultado quando necessário. 
+
+- Subciclo 1:
+
+O mir recebe os 32 bits de microinstrução vindos da Control Store. Como os sinais de controle são
+somente fios conectando cada um desses bits aos seus respectivos componentes, o recebimento é 
+praticamente instantâneo e contínuo. Assim que os encoders A e B recebem seus sinais de controle, já
+sinalizam para os registradores assinalados enviarem seus dados para os barramentos. esse Subciclo
+termina com a estabilização dos valores dos registradores nos barramentos.
+
+implementação: 
+    mir recebe o long da microinstrução e atualiza seus campos de sinais de controle, daí
+ele envia todos os dados de controle para seus respectivos componentes. Tudo isso está bem óbvio em 
+código, mas algo que eu não deixei tão explicito foi: para modelar o comportamento dos encoders de 
+já sinalizarem para os registradores assim que recebem seus sinais, eu os fiz agirem já dentro do 
+método recebeSinalXBus. Daí esse método manda o sinal para o registrador alvo, e esse já envia seu
+dado para o barramento, é uma pequena ação em cadeia.
+
+- Subciclo 2:
+
+Com o valores dos registradores já bem firmes nos barramentos, os latches recebem clock e "tiram uma
+foto" do que está nos barramentos, mantendo esses valores fixos durante todo o ciclo de microinstrução.
+Logo após isso, o mar recebe clock também, capturando o valor do latch B já alterado.
+
+implementação:
+    fiz o "receber clock" como um método no qual eles simplesmente coletam o dado do barramento 
+    declarado na inicialização deles, porém, aqui há uma diferença da implementação em hardware:
+    a parte combinacional (amux, ula e shifter) está sempre funcionando, então na prática ao atualizar
+    os latches, elas já fazem suas operações automaticamente. Por isso, no próprio recebe clock dos 
+    latches eles já enviam seus dados para o amux e a ula, para eles realizarem as suas operações.
+    Outro ponto importante: essas operações seguem uma cadeia: o amux recebe seu dado, escolhe a
+    saida e envia pra ula, que recebe, faz a operação e envia pro shifter, que recebe, faz a 
+    operação e envia pro barramento C. Só que pra essa cadeia acontecer de maneira semelhante ao real,
+    coloquei-a iniciando no latch A, por isso também que o latch B recebe clock primeiro.
+
+    Daí, é só o mar receber clock também, que é basicamente copiar o valor do latch B e enviar pra MP
+    (mesma ideia dos sinais de controle, em teoria, é contínuo, mas no código tem que armazenar em memória)
+
+
+- Subciclo 3:
+
+Com o valor nos latches já estáveis, é um tempinho para o amux, a ULA e o shifter estabilizarem
+suas saídas e o valor no barramento C se estabilizar também.
+
+implementação: já feita no subciclo2
+
+- Subciclo 4:
+
+Com a saída já bem estabilizada no barramento C, dois clocks são enviados simultâneamente:
+o do mbr e do decodificadorC. E com suas operações realizadas, tem-se fim o ciclo de microinstrução.
+
+implementação:
+    Não tenho como implementar ambos acontecendo ao mesmo tempo, mas, por sorte, um independe do 
+    outro e dá pra colocar em sequência sem problemas. Ambos os recebeClock são métodos. No caso do 
+    decodificadorC, ele verifica o sinal de controle ENC pra ver se precisa ou não gravar nos 
+    registradores o conteúdo do barramento C, em caso positivo verifica o sinal de controle de 4 bits
+    pra saber onde. No caso do mbr, ele verifica os 3 sinais de controle dele (MBR, WR e RD) pra saber
+    o que fazer e realiza.
+
+
+Explicações sobre o funcionamento da UC:
+
+quando o mpc recebe clock no inicio do subciclo, ele envia o sinal pra MicroMemoria enviar 
+x microinstrução pro mir e manda também o próprio sinal pro incrementador, que só soma 1 e envia
+pro mmux. Assim que o mir recebe sua microinstrução, ele também envia seu campo addr pro mmux,
+daí, no meio da execução da microinstrução, a ULA envia as flags para a lógica de microSequência,
+que envia pro mmux qual dos dois valores (incrementador ou addr) ele deve escolher para ser o valor
+do mpc e o envia.
+
