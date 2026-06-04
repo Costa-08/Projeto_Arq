@@ -1,7 +1,5 @@
 package simulador.mic1.vd;
 
-import simulador.mic1.vd.Barramento;
-
 public class Registrador {
 
     private int valor;
