@@ -101,9 +101,9 @@ public class Main {
         @SuppressWarnings("unused")
         String Lixo = scan.nextLine();
         if (numMacroinstrucoes<=2000){
+            System.out.print("Insira as macroinstruções:\n");
             for (int i=0; i<numMacroinstrucoes; i++){
-                System.out.print("Insira a macroinstrucao: ");
-                String microinstrucao=scan.nextLine();
+                String microinstrucao = scan.nextLine();
                 int microinstrucaoreal = Integer.parseInt(microinstrucao, 2);
                 memP.preencheMP(i, microinstrucaoreal);
             }
@@ -111,26 +111,35 @@ public class Main {
             System.out.println("Macroinstruções demais para a memória principal");
         }
 
-        while ((registradores[0].getValor()!=numMacroinstrucoes+1)){ // Iniciar todo macroprograma com goto 2, deixar um goto 1 em 1 e quando terminar ir para 1
+        int travaSeguranca = 0;
+
+        while ((registradores[0].getValor() != numMacroinstrucoes + 1) && travaSeguranca < 1000){ // Iniciar todo macroprograma com goto 2, deixar um goto 1 em 1 e quando terminar ir para 1
+            travaSeguranca++;
+
             /*
             Subciclo 1, mir recebe seus bits e os sinais de controle são enviados para todos os 
             componentes devidos, e os dados dos registradores selecionados vão para os barramentos A e B
             */
 
-            //System.out.println("\n\n");
-            //printRegs(registradores);
-            //mar.printValorMAR();
-            //mbr.printValorMBR();
-            //System.out.println("\n\n"); //debug
+           System.out.println("Trava de segurança: " + travaSeguranca);
+
+            // System.out.println("\n\n");
+            // printRegs(registradores, mar, mbr);
+            // mar.printValorMAR();
+            // mbr.printValorMBR();
+            // System.out.println("\n\n"); //debug
+
+            System.out.println("Valor do PC: " + registradores[0].getValor() + "\n");
 
             mpc.recebeClock();
-            //mir.printValorMicroinst();//debug            
+            mir.printValorMicroinst();//debug            
             mir.enviaSinaisControle();        
 
             /*
             Subciclo 2, os latches capturam os dados dos barramentos A e B, enviando-os para o amux, a ula e o mar
             o mar também recebe clock e dependendo do sinal de controle recebido, guarda ou não o valor do latch B
             */
+
             latchB.recebeClock();
             latchA.recebeClock();
             mar.recebeClock();
@@ -142,11 +151,14 @@ public class Main {
             */
 
             // subciclo 4
-
             decC.recebeClock();
             mbr.recebeClock();
 
-            
+            try{
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         
