@@ -8,7 +8,6 @@ package simulador.mic1.vd;/*
 */
 
 import simulador.mic1.uc.LogicaMicroSequencia;
-import simulador.mic1.vd.Shifter;
 
 public class UnidadeLogicoAritmetica {
 

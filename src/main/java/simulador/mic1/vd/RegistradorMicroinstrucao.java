@@ -7,7 +7,6 @@ Depois disso, os métodos "envia" devem ser chamados para entregar seus valores 
 
 import simulador.mic1.uc.LogicaMicroSequencia;
 import simulador.mic1.uc.MicroMultiplexador;
-import simulador.mic1.vd.Decodificador;
 
 public class RegistradorMicroinstrucao {
     private long microsInstrucao;

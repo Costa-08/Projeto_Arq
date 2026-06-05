@@ -1,7 +1,6 @@
 package simulador.mic1.vd;
 
 import simulador.mic1.memoriaprincipal.MemoriaPrincipal;
-import simulador.mic1.vd.LatchB;
 
 public class RegistradorEnderecoMemoria {
     

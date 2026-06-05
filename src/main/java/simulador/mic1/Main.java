@@ -20,11 +20,25 @@ Registradores:
 
 */
 
-import simulador.mic1.vd.*;
-import simulador.mic1.uc.*;
-import simulador.mic1.memoriaprincipal.*;
-
 import java.util.Scanner;
+
+import simulador.mic1.memoriaprincipal.MemoriaPrincipal;
+import simulador.mic1.uc.ContadorMicroPrograma;
+import simulador.mic1.uc.ControlStore;
+import simulador.mic1.uc.Incrementador;
+import simulador.mic1.uc.LogicaMicroSequencia;
+import simulador.mic1.uc.MicroMultiplexador;
+import simulador.mic1.vd.Amultiplexador;
+import simulador.mic1.vd.Barramento;
+import simulador.mic1.vd.Decodificador;
+import simulador.mic1.vd.LatchA;
+import simulador.mic1.vd.LatchB;
+import simulador.mic1.vd.Registrador;
+import simulador.mic1.vd.RegistradorBufferMemoria;
+import simulador.mic1.vd.RegistradorEnderecoMemoria;
+import simulador.mic1.vd.RegistradorMicroinstrucao;
+import simulador.mic1.vd.Shifter;
+import simulador.mic1.vd.UnidadeLogicoAritmetica;
 
 public class Main {
     @SuppressWarnings("ConvertToTryWithResources")
@@ -98,8 +112,7 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         System.out.print("Insira a quantidade de macroinstrucoes: ");
         int numMacroinstrucoes = scan.nextInt();
-        @SuppressWarnings("unused")
-        String Lixo = scan.nextLine();
+        scan.nextLine();
         if (numMacroinstrucoes<=2000){
             System.out.print("Insira as macroinstruções:\n");
             for (int i=0; i<numMacroinstrucoes; i++){
@@ -111,11 +124,7 @@ public class Main {
             System.out.println("Macroinstruções demais para a memória principal");
         }
 
-        int travaSeguranca = 0;
-
-        while ((registradores[0].getValor() != numMacroinstrucoes + 1) && travaSeguranca < 1000){ // Iniciar todo macroprograma com goto 2, deixar um goto 1 em 1 e quando terminar ir para 1
-            travaSeguranca++;
-
+        while ((registradores[0].getValor()!=numMacroinstrucoes+1)){
             /*
             Subciclo 1, mir recebe seus bits e os sinais de controle são enviados para todos os 
             componentes devidos, e os dados dos registradores selecionados vão para os barramentos A e B
@@ -153,19 +162,14 @@ public class Main {
             // subciclo 4
             decC.recebeClock();
             mbr.recebeClock();
-
-            try{
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            
         }
 
         
         // printar resultados e estados para verificação
 
         printRegs(registradores, mar, mbr);
-
+        scan.close();
     }
 
     private static void printRegs(Registrador[] registradores, RegistradorEnderecoMemoria mar, RegistradorBufferMemoria mbr){

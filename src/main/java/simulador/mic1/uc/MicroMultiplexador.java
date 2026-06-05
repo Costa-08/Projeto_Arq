@@ -1,7 +1,5 @@
 package simulador.mic1.uc;
 
-import simulador.mic1.uc.ContadorMicroPrograma;
-
 public class MicroMultiplexador {
     private int valorIncrementador;
     private int valorADDR;
