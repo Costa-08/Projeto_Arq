@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -20,6 +21,14 @@ public class Tela extends Application {
 
     @FXML
     private TextArea instrucoes;
+
+    @FXML
+    private Button botaoEnviarDados;
+
+    @FXML
+    private void enviarDados() {
+        // Lógica para enviar os dados
+    }
 
     @FXML
     public void initialize() {
@@ -43,9 +52,20 @@ public class Tela extends Application {
                                 .add(20)                 // Adiciona 20 pixels de "margem" entre eles
         );
 
+        botaoEnviarDados.layoutXProperty().bind(
+            caixaSecundaria.widthProperty().subtract(botaoEnviarDados.widthProperty()).divide(2)
+        );
+
+        botaoEnviarDados.layoutYProperty().bind(
+            instrucoes.layoutYProperty()
+                .add(instrucoes.heightProperty())
+                .add(20)
+        );
+
         caixaSecundaria.prefHeightProperty().bind(
             instrucoes.layoutYProperty()       // Pega onde a caixa de baixo começa
                     .add(instrucoes.heightProperty()) // Soma o tamanho que ela tem
+                    .add(botaoEnviarDados.heightProperty()) // Soma o tamanho do botão
                     .add(30)                 // Adiciona os 30px de chão
         );
 

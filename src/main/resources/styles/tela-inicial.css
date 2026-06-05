@@ -21,7 +21,9 @@
 }
 
 #quantidadeInstrucoes {
-    -fx-text-fill: rgb(233, 229, 229);
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: white;
+    -fx-font-weight: bold;
     -fx-font-size: 20px;
 
     -fx-background-color: rgb(162, 160, 160);
@@ -36,7 +38,9 @@
 }
 
 #instrucoes {
-    -fx-text-fill: rgb(233, 229, 229);
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: white;
+    -fx-font-weight: bold;
     -fx-font-size: 20px;
 
     -fx-background-color: rgb(162, 160, 160);
@@ -46,6 +50,30 @@
     -fx-background-radius: 5px;
 
     -fx-border-radius: 5px;
+}
+
+#botaoEnviarDados {
+    -fx-background-color: rgb(162, 160, 160);
+    -fx-border-color: gray;
+    -fx-border-width: 0.2px;
+
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5px;
+
+    -fx-border-radius: 5px;
+
+    -fx-transition: 0.3s;
+}
+
+#botaoEnviarDados:hover {
+    -fx-background-color: rgb(142, 140, 140);
+}
+
+#botaoEnviarDados:pressed {
+    -fx-background-color: rgb(122, 120, 120);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
 }
 
 #instrucoes .scroll-pane,
