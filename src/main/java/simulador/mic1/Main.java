@@ -130,18 +130,16 @@ public class Main {
             componentes devidos, e os dados dos registradores selecionados vão para os barramentos A e B
             */
 
-           System.out.println("Trava de segurança: " + travaSeguranca);
-
             // System.out.println("\n\n");
             // printRegs(registradores, mar, mbr);
             // mar.printValorMAR();
             // mbr.printValorMBR();
             // System.out.println("\n\n"); //debug
 
-            System.out.println("Valor do PC: " + registradores[0].getValor() + "\n");
+            //System.out.println("Valor do PC: " + registradores[0].getValor() + "\n");
 
             mpc.recebeClock();
-            mir.printValorMicroinst();//debug            
+            // mir.printValorMicroinst();//debug            
             mir.enviaSinaisControle();        
 
             /*
