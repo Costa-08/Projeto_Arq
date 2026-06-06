@@ -1,5 +1,7 @@
 package simulador.projecao;
 
+import java.util.function.UnaryOperator;
+
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -27,12 +30,37 @@ public class Tela extends Application {
 
     @FXML
     private void enviarDados() {
-        // Lógica para enviar os dados
+        String quantidadeInstrucoes = this.quantidadeInstrucoes.getText();
+        int quantidade = Integer.parseInt(quantidadeInstrucoes);
+        String instrucoes = this.instrucoes.getText();
+
+        if (quantidade > 0 && !instrucoes.isEmpty()) {
+            System.out.println(quantidade);
+            System.out.println(instrucoes);
+        }
     }
 
     @FXML
     public void initialize() {
-        
+
+        UnaryOperator<TextFormatter.Change> filtroNumeroQuatidade = change -> {
+            if (change.getText().matches("[0-9]*")) {
+                return change; 
+            }
+            return null; 
+        };
+
+        UnaryOperator<TextFormatter.Change> filtroNumerosMacroinstrucoes = change -> {
+            if (change.getText().matches("[0-1]*")) {
+                return change; 
+            }
+            return null; 
+        };
+
+        quantidadeInstrucoes.setTextFormatter(new TextFormatter<>(filtroNumeroQuatidade));
+
+        instrucoes.setTextFormatter(new TextFormatter<>(filtroNumerosMacroinstrucoes));
+
         quantidadeInstrucoes.layoutXProperty().bind(
             caixaSecundaria.widthProperty()
             .subtract(quantidadeInstrucoes.widthProperty())
