@@ -1,5 +1,7 @@
 package simulador.projecao;
 
+import simulador.mic1.Mic1;
+
 import java.util.function.UnaryOperator;
 
 import javafx.application.Application;
@@ -15,6 +17,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class Tela extends Application {
+
+    private Mic1 mic1 = new Mic1();
 
     @FXML
     private Pane caixaSecundaria;
@@ -32,11 +36,11 @@ public class Tela extends Application {
     private void enviarDados() {
         String quantidadeInstrucoes = this.quantidadeInstrucoes.getText();
         int quantidade = Integer.parseInt(quantidadeInstrucoes);
-        String instrucoes = this.instrucoes.getText();
+        String instrucoes = this.instrucoes.getText().trim();
+        String[] arrayInstrucoes = instrucoes.split("\\R");
 
         if (quantidade > 0 && !instrucoes.isEmpty()) {
-            System.out.println(quantidade);
-            System.out.println(instrucoes);
+            this.mic1.simular(quantidade, arrayInstrucoes);
         }
     }
 
@@ -50,16 +54,7 @@ public class Tela extends Application {
             return null; 
         };
 
-        UnaryOperator<TextFormatter.Change> filtroNumerosMacroinstrucoes = change -> {
-            if (change.getText().matches("[0-1]*")) {
-                return change; 
-            }
-            return null; 
-        };
-
         quantidadeInstrucoes.setTextFormatter(new TextFormatter<>(filtroNumeroQuatidade));
-
-        instrucoes.setTextFormatter(new TextFormatter<>(filtroNumerosMacroinstrucoes));
 
         quantidadeInstrucoes.layoutXProperty().bind(
             caixaSecundaria.widthProperty()
