@@ -1,12 +1,13 @@
 package simulador.mic1.vd;
 
-import simulador.mic1.memoriaprincipal.MemoriaPrincipal;
+import simulador.mic1.memoria.MemoriaPrincipal;
+import simulador.mic1.memoria.CacheL1;
 
 public class RegistradorBufferMemoria {
     
     private int valor;
 
-    private final MemoriaPrincipal mp;
+    private final CacheL1 cache;
     private final Barramento busC;
     private final Amultiplexador amux;
 
@@ -14,8 +15,8 @@ public class RegistradorBufferMemoria {
     private int somaSinais;
 
 
-    public RegistradorBufferMemoria(MemoriaPrincipal memory, Barramento bus, Amultiplexador mx){
-        this.mp=memory;
+    public RegistradorBufferMemoria(CacheL1 cacheParametro, Barramento bus, Amultiplexador mx){
+        this.cache=cacheParametro;
         this.busC=bus;
         this.amux=mx;
     }
@@ -37,11 +38,11 @@ public class RegistradorBufferMemoria {
     }
 
     public void escrita(){
-        mp.store(this.valor);
+        cache.store(this.valor);
     }
 
     public void leitura(){
-        this.valor=mp.load();
+        this.valor=cache.load();
     }   
 
     public void receberCBus(){

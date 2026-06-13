@@ -1,6 +1,7 @@
 package simulador.mic1.vd;
 
-import simulador.mic1.memoriaprincipal.MemoriaPrincipal;
+import simulador.mic1.memoria.MemoriaPrincipal;
+import simulador.mic1.memoria.CacheL1;
 
 public class RegistradorEnderecoMemoria {
     
@@ -10,11 +11,11 @@ public class RegistradorEnderecoMemoria {
 
     private final LatchB latchB;
 
-    private final MemoriaPrincipal mp;
+    private final CacheL1 cache;
     private final int MASK = 0xFFF;
 
-    public RegistradorEnderecoMemoria(MemoriaPrincipal memory, LatchB latch){
-        this.mp=memory;
+    public RegistradorEnderecoMemoria(CacheL1 cacheParametro, LatchB latch){
+        this.cache=cacheParametro;
         this.latchB = latch;
     }
 
@@ -25,7 +26,7 @@ public class RegistradorEnderecoMemoria {
     public void recebeClock(){
         if (sinalControle){
             valor=latchB.getConteudo()&MASK;
-            mp.recebeValorMAR(valor);
+            cache.recebeValorMAR(valor);
         }
     }
 

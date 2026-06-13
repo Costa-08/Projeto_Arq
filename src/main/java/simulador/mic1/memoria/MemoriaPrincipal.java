@@ -1,4 +1,4 @@
-package simulador.mic1.memoriaprincipal;
+package simulador.mic1.memoria;
 
 public class MemoriaPrincipal{
 

@@ -22,29 +22,16 @@ Registradores:
 
 import java.util.Scanner;
 
-import simulador.mic1.memoriaprincipal.MemoriaPrincipal;
-import simulador.mic1.uc.ContadorMicroPrograma;
-import simulador.mic1.uc.ControlStore;
-import simulador.mic1.uc.Incrementador;
-import simulador.mic1.uc.LogicaMicroSequencia;
-import simulador.mic1.uc.MicroMultiplexador;
-import simulador.mic1.vd.Amultiplexador;
-import simulador.mic1.vd.Barramento;
-import simulador.mic1.vd.Decodificador;
-import simulador.mic1.vd.LatchA;
-import simulador.mic1.vd.LatchB;
-import simulador.mic1.vd.Registrador;
-import simulador.mic1.vd.RegistradorBufferMemoria;
-import simulador.mic1.vd.RegistradorEnderecoMemoria;
-import simulador.mic1.vd.RegistradorMicroinstrucao;
-import simulador.mic1.vd.Shifter;
-import simulador.mic1.vd.UnidadeLogicoAritmetica;
+import simulador.mic1.memoria.*;
+import simulador.mic1.uc.*;
+import simulador.mic1.vd.*;
 
 public class Mic1 {
 
     @SuppressWarnings("ConvertToTryWithResources")
     
     private MemoriaPrincipal memP;
+    private CacheL1 cache;
 
     private Barramento busA;
     private Barramento busB;
@@ -79,6 +66,7 @@ public class Mic1 {
     public Mic1 () {
 
         this.memP = new MemoriaPrincipal();
+        this.cache = new CacheL1(this.memP);
         this.busA = new Barramento();
         this.busB = new Barramento();
         this.busC = new Barramento();
@@ -107,8 +95,8 @@ public class Mic1 {
 
         this.Amux = new Amultiplexador(this.ULA);
 
-        this.mar = new RegistradorEnderecoMemoria(this.memP, this.latchB);
-        this.mbr = new RegistradorBufferMemoria(this.memP, this.busC, this.Amux);
+        this.mar = new RegistradorEnderecoMemoria(this.cache, this.latchB);
+        this.mbr = new RegistradorBufferMemoria(this.cache, this.busC, this.Amux);
 
         this.mir = new RegistradorMicroinstrucao(this.decA, this.decB, this.decC, this.mar, this.mbr, this.shifter, this.ULA, this.Amux);
         this.microMemoria = new ControlStore(this.mir);
