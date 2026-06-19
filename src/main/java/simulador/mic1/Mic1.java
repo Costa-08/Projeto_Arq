@@ -20,11 +20,26 @@ Registradores:
 
 */
 
-import java.util.Scanner;
+import java.util.ArrayList;
 
-import simulador.mic1.memoria.*;
-import simulador.mic1.uc.*;
-import simulador.mic1.vd.*;
+import simulador.mic1.memoria.CacheL1;
+import simulador.mic1.memoria.MemoriaPrincipal;
+import simulador.mic1.uc.ContadorMicroPrograma;
+import simulador.mic1.uc.ControlStore;
+import simulador.mic1.uc.Incrementador;
+import simulador.mic1.uc.LogicaMicroSequencia;
+import simulador.mic1.uc.MicroMultiplexador;
+import simulador.mic1.vd.Amultiplexador;
+import simulador.mic1.vd.Barramento;
+import simulador.mic1.vd.Decodificador;
+import simulador.mic1.vd.LatchA;
+import simulador.mic1.vd.LatchB;
+import simulador.mic1.vd.Registrador;
+import simulador.mic1.vd.RegistradorBufferMemoria;
+import simulador.mic1.vd.RegistradorEnderecoMemoria;
+import simulador.mic1.vd.RegistradorMicroinstrucao;
+import simulador.mic1.vd.Shifter;
+import simulador.mic1.vd.UnidadeLogicoAritmetica;
 
 public class Mic1 {
 
@@ -62,6 +77,7 @@ public class Mic1 {
     private LogicaMicroSequencia logMicroSequencia;
 
     private Incrementador inc;
+    private Assembler assembler;
 
     public Mic1 () {
 
@@ -122,22 +138,24 @@ public class Mic1 {
 
     }
 
-    public void simular(int numMacroinstrucoes, String[] microinstrucao) {
+    public void simular() {
+        
+        ArrayList<Integer> macroInstrucoes = assembler.getMacroInstrucoes();
+        int numMacroinstrucoes = assembler.getPosHalt();
 
         this.printRegs(registradores, mar, mbr);
 
         if (numMacroinstrucoes <= 2000){
 
             for (int i = 0; i < numMacroinstrucoes; i++){
-                int microinstrucaoreal = Integer.parseInt(microinstrucao[i], 2);
-                this.memP.preencheMP(i, microinstrucaoreal);
+                this.memP.preencheMP(i, macroInstrucoes.get(i));
 
             }
         }else{
             System.out.println("Macroinstruções demais para a memória principal");
         }
 
-        while ((this.registradores[0].getValor() != numMacroinstrucoes + 1)){
+        while ((this.registradores[0].getValor() != numMacroinstrucoes + 1)){ // Loop principal 
             this.ciclo();
         }
 
