@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class Assembler {
     
-    private ArrayList<String> codigoUsuario;      // Guarda o código original (ex: linha por linha)
+    private ArrayList<String> codigoUsuario;   
     private ArrayList<Integer> macroInstrucoes;
     private final HashMap<String, Integer> tabelaTraducao;
     private HashMap<String, Integer> tabelaEnderecos;
@@ -27,20 +27,19 @@ public class Assembler {
         preencherTabelaTraducao();
     }
 
-    public void setCodigoUsuario(String codigoCompleto) {
+    public void setCodigoUsuario(String[] linhas) {
         
-        if (codigoCompleto == null || codigoCompleto.trim().toUpperCase().isEmpty()) {
+        if (linhas == null || linhas.length == 0) {
             return;
         }
         
         this.codigoUsuario.clear(); 
 
-        String[] linhas = codigoCompleto.split("\\r?\\n");
-
         for (String linha : linhas) {
-            this.codigoUsuario.add(linha.toUpperCase());
+            if (!linha.trim().isEmpty()) {
+                this.codigoUsuario.add(linha.toUpperCase());
+            }
         }
-
     }
     
     public ArrayList<Integer> getMacroInstrucoes() {

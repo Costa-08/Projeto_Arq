@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Label?>
+
+<AnchorPane id="PaginaMicroinstrucoes"
+    stylesheets="@../styles/nanoprocessos.css"
+    xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml">
+
+   <children>
+      <Label fx:id="cicloClock" layoutX="50.0" layoutY="14.0" prefHeight="25.0" prefWidth="500.0" />
+      
+      <TableView fx:id="tabelaDados" layoutX="50.0" layoutY="50.0" prefHeight="700.0" prefWidth="500.0">
+        <columns>
+          <TableColumn fx:id="colunaNome" prefWidth="250.0" text="Registrador / Componente" />
+          <TableColumn fx:id="colunaValor" prefWidth="250.0" text="Valor Atual" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

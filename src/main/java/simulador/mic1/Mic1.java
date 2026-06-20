@@ -44,6 +44,9 @@ import simulador.mic1.vd.UnidadeLogicoAritmetica;
 public class Mic1 {
 
     @SuppressWarnings("ConvertToTryWithResources")
+
+    int clock = 1;
+    int numMacroinstrucoes;
     
     private MemoriaPrincipal memP;
     private CacheL1 cache;
@@ -140,10 +143,20 @@ public class Mic1 {
 
     }
 
-    public void simular(int quantidade, String[] arrayInstrucoes) {
+    public void preparaMemoria(String[] arrayInstrucoes) {
+        
+        
+        this.assembler.setCodigoUsuario(arrayInstrucoes);
+
+        String statusCompilacao = this.assembler.compilar();
+        
+        if (!statusCompilacao.equals("CERTO")) {
+            System.err.println("Erro na compilação: " + statusCompilacao);
+            return;
+        }
         
         ArrayList<Integer> macroInstrucoes = assembler.getMacroInstrucoes();
-        int numMacroinstrucoes = assembler.getPosHalt();
+        this.numMacroinstrucoes = assembler.getPosHalt();
 
         this.printRegs(registradores, mar, mbr);
 
@@ -153,21 +166,30 @@ public class Mic1 {
                 this.memP.preencheMP(i, macroInstrucoes.get(i));
 
             }
+            
         }else{
             System.out.println("Macroinstruções demais para a memória principal");
         }
 
-        while ((this.registradores[0].getValor() != numMacroinstrucoes + 1)){ // Loop principal 
-            this.ciclo();
-        }
-
-        // printar resultados e estados para verificação
-        this.printRegs(registradores, mar, mbr);
-
-        System.out.println("Sai do loop");
     }
 
-    private void ciclo (){
+    public boolean acabou() {
+        return this.registradores[0].getValor() == this.numMacroinstrucoes + 1;
+    }
+
+    public int getValorReg(int indice) {
+        return this.registradores[indice].getValor();
+    }
+
+    public int getValorMAR() { 
+        return this.mar.getValorMAR();
+    }
+
+    public int getValorMBR() {
+        return this.mbr.getValorMBR();
+    }
+
+    public void ciclo(){
         /*
         Subciclo 1, mir recebe seus bits e os sinais de controle são enviados para todos os 
         componentes devidos, e os dados dos registradores selecionados vão para os barramentos A e B
@@ -207,12 +229,13 @@ public class Mic1 {
 
 
     private void printRegs(Registrador[] registradores, RegistradorEnderecoMemoria mar, RegistradorBufferMemoria mbr){
-        // Para analisar a situação do código
+        
+        int []valores = new int[16];
         for (int i=0; i<16; i++){
             System.out.printf("Valor no registrador[%d]: %d \n", i, registradores[i].getValor());
         }
-        this.mar.printValorMAR();
-        this.mbr.printValorMBR();
+        //this.mar.getValorMAR();
+        //this.mbr.printValorMBR();
     }
 
 }

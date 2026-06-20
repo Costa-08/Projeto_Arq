@@ -1,0 +1,38 @@
+#PaginaMicroinstrucoes {
+    -fx-background-color: rgb(233, 229, 229);
+    -fx-padding: 30px;
+    -fx-alignment: center;
+    -fx-spacing: 100px;
+}
+
+#cicloClock {
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+
+    -fx-background-color: rgb(162, 160, 160);
+    -fx-border-color: gray;
+    -fx-border-width: 0.2px;
+
+    /* Arredonda a cor de fundo */
+    -fx-background-radius: 10px;
+
+    /* Arredonda a linha da borda para acompanhar o fundo */
+    -fx-border-radius: 5px;
+}
+
+#tabelaDados {
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+
+    -fx-background-color: rgb(162, 160, 160);
+    -fx-border-color: gray;
+    -fx-border-width: 0.2px;
+
+    -fx-background-radius: 5px;
+
+    -fx-border-radius: 5px;
+}

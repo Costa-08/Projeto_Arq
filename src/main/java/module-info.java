@@ -4,6 +4,10 @@ module com.example.trabalhoarqmic1javafx {
 
     opens simulador.mic1 to javafx.fxml;
     exports simulador.mic1;
+    
     opens simulador.projecao to javafx.graphics, javafx.fxml;
     exports simulador.projecao;
+
+    opens simulador.projecao.microinstrucoes to javafx.fxml;
+    exports simulador.projecao.microinstrucoes;
 }

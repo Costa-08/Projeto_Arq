@@ -15,10 +15,15 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import simulador.projecao.microinstrucoes.SimulacaoMicrocodigo;
 
 public class Tela extends Application {
 
     private Mic1 mic1 = new Mic1();
+    private SimulacaoMicrocodigo microcodigo = new SimulacaoMicrocodigo();
+    
+    // O RELÓGIO FOI MOVIDO PARA AQUI PARA PODER SER PARADO!
+    private javafx.animation.Timeline relogioCentral;
 
     @FXML
     private Pane caixaSecundaria;
@@ -32,15 +37,65 @@ public class Tela extends Application {
     @FXML
     private Button botaoEnviarDados;
 
+    // --- MODO AUTOMÁTICO ---
     @FXML
     private void enviarDados() {
-        String quantidadeInstrucoes = this.quantidadeInstrucoes.getText();
-        int quantidade = Integer.parseInt(quantidadeInstrucoes);
-        String instrucoes = this.instrucoes.getText().trim();
-        String[] arrayInstrucoes = instrucoes.split("\\R");
+        String quantidadeInstrucoesText = this.quantidadeInstrucoes.getText();
+        String instrucoesText = this.instrucoes.getText().trim();
 
-        if (quantidade > 0 && !instrucoes.isEmpty()) {
-            this.mic1.simular(quantidade, arrayInstrucoes);
+        if (quantidadeInstrucoesText != null && !quantidadeInstrucoesText.isEmpty() && !instrucoesText.isEmpty()) {
+            
+            String[] arrayInstrucoes = instrucoesText.split("\\R");
+
+            this.mic1.preparaMemoria(arrayInstrucoes);
+            this.microcodigo.exibir();
+
+            // Avisa a outra janela que estamos no modo Automático (esconde o botão de passar passo a passo)
+            this.microcodigo.configurarModo(false, this.mic1);
+
+            // Pára qualquer simulação anterior que pudesse estar a correr
+            if (relogioCentral != null) {
+                relogioCentral.stop();
+            }
+
+            relogioCentral = new javafx.animation.Timeline(
+                new javafx.animation.KeyFrame(javafx.util.Duration.millis(500), evento -> { // Ajustado para 500ms
+                
+                if (!this.mic1.acabou()) {
+                    
+                    this.mic1.ciclo(); // Avança 1 ciclo
+                    this.microcodigo.atualizarTabela(this.mic1); // Atualiza os dados na tela
+                    
+                } else {
+                    System.out.println("Simulação concluída!");
+                    relogioCentral.stop(); // TRAVÃO QUE ACABA COM O LOOP INFINITO
+                    this.microcodigo.finalizarSimulacao(); // Faz aparecer o botão "Rodar outro código"
+                }
+            }));
+
+            relogioCentral.setCycleCount(javafx.animation.Animation.INDEFINITE);
+            relogioCentral.play(); 
+        }
+    }
+
+    // --- MODO MANUAL (NOVO!) ---
+    @FXML
+    private void enviarDadosManual() {
+        String quantidadeInstrucoesText = this.quantidadeInstrucoes.getText();
+        String instrucoesText = this.instrucoes.getText().trim();
+
+        if (quantidadeInstrucoesText != null && !quantidadeInstrucoesText.isEmpty() && !instrucoesText.isEmpty()) {
+            String[] arrayInstrucoes = instrucoesText.split("\\R");
+
+            if (relogioCentral != null) {
+                relogioCentral.stop();
+            }
+
+            this.mic1.preparaMemoria(arrayInstrucoes);
+            this.microcodigo.exibir();
+            
+            // Ativa o modo manual: exibe o botão "Avançar 1 Ciclo" no ecrã de Microcódigo
+            this.microcodigo.configurarModo(true, this.mic1);
         }
     }
 
@@ -68,11 +123,10 @@ public class Tela extends Application {
             caixaSecundaria.widthProperty().subtract(instrucoes.widthProperty()).divide(2)
         );
 
-        // AGORA A MÁGICA: O 'Y' do TextArea vai ficar amarrado à base do TextField!
         instrucoes.layoutYProperty().bind(
-            quantidadeInstrucoes.layoutYProperty()       // Pega a posição Y do de cima
-                                .add(quantidadeInstrucoes.heightProperty()) // Soma com a altura do de cima
-                                .add(20)                 // Adiciona 20 pixels de "margem" entre eles
+            quantidadeInstrucoes.layoutYProperty()       
+                                .add(quantidadeInstrucoes.heightProperty()) 
+                                .add(20)                 
         );
 
         botaoEnviarDados.layoutXProperty().bind(
@@ -86,10 +140,10 @@ public class Tela extends Application {
         );
 
         caixaSecundaria.prefHeightProperty().bind(
-            instrucoes.layoutYProperty()       // Pega onde a caixa de baixo começa
-                    .add(instrucoes.heightProperty()) // Soma o tamanho que ela tem
-                    .add(botaoEnviarDados.heightProperty()) // Soma o tamanho do botão
-                    .add(30)                 // Adiciona os 30px de chão
+            instrucoes.layoutYProperty()       
+                    .add(instrucoes.heightProperty()) 
+                    .add(botaoEnviarDados.heightProperty()) 
+                    .add(30)                 
         );
 
     }
