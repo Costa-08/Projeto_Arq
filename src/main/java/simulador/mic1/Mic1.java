@@ -136,9 +136,11 @@ public class Mic1 {
 
         this.mpc.setIncrementador(this.inc);
 
+        this.assembler = new Assembler();
+
     }
 
-    public void simular() {
+    public void simular(int quantidade, String[] arrayInstrucoes) {
         
         ArrayList<Integer> macroInstrucoes = assembler.getMacroInstrucoes();
         int numMacroinstrucoes = assembler.getPosHalt();
