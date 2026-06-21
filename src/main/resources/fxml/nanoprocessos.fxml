@@ -2,23 +2,32 @@
 
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane id="PaginaMicroinstrucoes"
+    prefHeight="600.0" prefWidth="820.0"
     stylesheets="@../styles/nanoprocessos.css"
     xmlns="http://javafx.com/javafx"
     xmlns:fx="http://javafx.com/fxml">
 
    <children>
-      <Label fx:id="cicloClock" layoutX="50.0" layoutY="14.0" prefHeight="25.0" prefWidth="500.0" />
+      <Label fx:id="cicloClock" layoutX="50.0" layoutY="14.0" prefHeight="25.0" prefWidth="450.0" />
       
-      <TableView fx:id="tabelaDados" layoutX="50.0" layoutY="50.0" prefHeight="700.0" prefWidth="500.0">
+      <TableView fx:id="tabelaDados" layoutX="50.0" layoutY="50.0" prefHeight="500.0" prefWidth="450.0">
         <columns>
-          <TableColumn fx:id="colunaNome" prefWidth="250.0" text="Registrador / Componente" />
-          <TableColumn fx:id="colunaValor" prefWidth="250.0" text="Valor Atual" />
+          <TableColumn fx:id="colunaNome" prefWidth="225.0" text="Registrador / Componente" />
+          <TableColumn fx:id="colunaValor" prefWidth="225.0" text="Valor Atual" />
         </columns>
       </TableView>
+
+      <Button fx:id="botaoAvancar" layoutX="520.0" layoutY="50.0" prefWidth="250.0" prefHeight="40.0" text="Avançar 1 Ciclo" visible="false" onAction="#avancarCicloManual" />
+
+      <Button fx:id="botaoVoltar" layoutX="520.0" layoutY="100.0" prefWidth="250.0" prefHeight="40.0" text="Rodar outro código" visible="false" onAction="#voltarTelaInicial" />
+
+      <Label layoutX="520.0" layoutY="160.0" text="Log de Microinstruções:" />
+      <TextArea fx:id="logMicroinstrucoes" layoutX="520.0" layoutY="185.0" prefWidth="250.0" prefHeight="365.0" editable="false" wrapText="true" />
    </children>
 </AnchorPane>

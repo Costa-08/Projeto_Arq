@@ -18,17 +18,19 @@
     <Label id="Titulo" text="MIC 1"/>
 
     <Pane fx:id="caixaSecundaria">
-    <TextField fx:id="quantidadeInstrucoes"
-               prefWidth="600.0" maxWidth="1250.0"
-               prefHeight="50.0" maxHeight="75.0"
-               promptText="Digite a quantidade de macroinstrucoes"/>
+        <TextField fx:id="quantidadeInstrucoes"
+                   prefWidth="600.0" maxWidth="1250.0"
+                   prefHeight="50.0" maxHeight="75.0"
+                   promptText="Digite a quantidade de macroinstrucoes"/>
 
-    <TextArea fx:id="instrucoes"
-              prefWidth="600.0" maxWidth="1250.0"
-              prefHeight="200.0" maxHeight="300.0"
-              promptText="Digite aqui as instrucoes"/>
+        <TextArea fx:id="instrucoes"
+                  prefWidth="600.0" maxWidth="1250.0"
+                  prefHeight="200.0" maxHeight="300.0"
+                  promptText="Digite aqui as instrucoes"/>
 
-    <Button fx:id="botaoEnviarDados" text="Enviar Dados" onAction="#enviarDados"/>
+        <Button fx:id="botaoEnviarDados" text="Ciclos automaticos" onAction="#enviarDados"/>
+
+        <Button fx:id="botaoControlarCiclos" text="Rodar controlando ciclos" onAction="#enviarDadosManual" />
 
     </Pane>
 </VBox>

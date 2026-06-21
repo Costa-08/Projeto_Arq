@@ -111,11 +111,25 @@ public class SimulacaoMicrocodigo {
             cicloClock.setText("Ciclo de Clock Atual: " + contadorCiclos);
         }
 
-        // PRINTA A MICROINSTRUÇÃO NO LOG LATERAL
+        // PRINTA A INFORMAÇÃO REAL DO PROCESSADOR NO LOG LATERAL
         if (logMicroinstrucoes != null) {
-            logMicroinstrucoes.appendText("Ciclo " + contadorCiclos + " executado.\n");
-            // Se você quiser expor variáveis internas da unidade de controle do Mic1 futuramente:
-            // logMicroinstrucoes.appendText(" -> Próximo MPC: " + motor.getValorMPC() + "\n");
+            int pcAtual = motor.getValorReg(0); 
+            int mbrAtual = motor.getValorMBR(); 
+            //String statusCache = motor.getStatusCache(); // Puxa o aviso da cache
+            
+            // Monta o texto base do ciclo
+            StringBuilder logTexto = new StringBuilder();
+            logTexto.append(String.format("Ciclo %d -> PC: %d | MBR: %d", contadorCiclos, pcAtual, mbrAtual));
+            
+            // Se a cache trabalhou neste ciclo, adiciona no painel!
+            // if (statusCache != null && !statusCache.isEmpty()) {
+            //     logTexto.append(" | CACHE: ").append(statusCache);
+            // }
+            
+            logTexto.append("\n"); // Pula de linha no final
+            
+            logMicroinstrucoes.appendText(logTexto.toString());
+            logMicroinstrucoes.setScrollTop(Double.MAX_VALUE); // Rola para o fim automaticamente
         }
 
         for (int i = 0; i < 16; i++) {

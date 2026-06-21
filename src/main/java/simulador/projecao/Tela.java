@@ -37,6 +37,10 @@ public class Tela extends Application {
     @FXML
     private Button botaoEnviarDados;
 
+    @FXML
+    private Button botaoControlarCiclos; // O SEGUNDO BOTÃO ADICIONADO AQUI
+
+    // --- MODO AUTOMÁTICO ---
     // --- MODO AUTOMÁTICO ---
     @FXML
     private void enviarDados() {
@@ -44,32 +48,30 @@ public class Tela extends Application {
         String instrucoesText = this.instrucoes.getText().trim();
 
         if (quantidadeInstrucoesText != null && !quantidadeInstrucoesText.isEmpty() && !instrucoesText.isEmpty()) {
-            
             String[] arrayInstrucoes = instrucoesText.split("\\R");
+
+            // O SEGREDO: Cria um processador e uma tela novos e limpos a cada clique!
+            this.mic1 = new Mic1();
+            this.microcodigo = new SimulacaoMicrocodigo();
 
             this.mic1.preparaMemoria(arrayInstrucoes);
             this.microcodigo.exibir();
-
-            // Avisa a outra janela que estamos no modo Automático (esconde o botão de passar passo a passo)
             this.microcodigo.configurarModo(false, this.mic1);
 
-            // Pára qualquer simulação anterior que pudesse estar a correr
             if (relogioCentral != null) {
                 relogioCentral.stop();
             }
 
             relogioCentral = new javafx.animation.Timeline(
-                new javafx.animation.KeyFrame(javafx.util.Duration.millis(500), evento -> { // Ajustado para 500ms
+                new javafx.animation.KeyFrame(javafx.util.Duration.millis(500), evento -> {
                 
                 if (!this.mic1.acabou()) {
-                    
-                    this.mic1.ciclo(); // Avança 1 ciclo
-                    this.microcodigo.atualizarTabela(this.mic1); // Atualiza os dados na tela
-                    
+                    this.mic1.ciclo(); 
+                    this.microcodigo.atualizarTabela(this.mic1); 
                 } else {
                     System.out.println("Simulação concluída!");
-                    relogioCentral.stop(); // TRAVÃO QUE ACABA COM O LOOP INFINITO
-                    this.microcodigo.finalizarSimulacao(); // Faz aparecer o botão "Rodar outro código"
+                    relogioCentral.stop(); 
+                    this.microcodigo.finalizarSimulacao(); 
                 }
             }));
 
@@ -78,7 +80,7 @@ public class Tela extends Application {
         }
     }
 
-    // --- MODO MANUAL (NOVO!) ---
+    // --- MODO MANUAL ---
     @FXML
     private void enviarDadosManual() {
         String quantidadeInstrucoesText = this.quantidadeInstrucoes.getText();
@@ -91,10 +93,12 @@ public class Tela extends Application {
                 relogioCentral.stop();
             }
 
+            // O SEGREDO TAMBÉM AQUI: Zera tudo antes de rodar passo a passo!
+            this.mic1 = new Mic1();
+            this.microcodigo = new SimulacaoMicrocodigo();
+
             this.mic1.preparaMemoria(arrayInstrucoes);
             this.microcodigo.exibir();
-            
-            // Ativa o modo manual: exibe o botão "Avançar 1 Ciclo" no ecrã de Microcódigo
             this.microcodigo.configurarModo(true, this.mic1);
         }
     }
@@ -129,16 +133,25 @@ public class Tela extends Application {
                                 .add(20)                 
         );
 
+        // Botão Automático: Fica ligeiramente deslocado para a esquerda do centro
         botaoEnviarDados.layoutXProperty().bind(
-            caixaSecundaria.widthProperty().subtract(botaoEnviarDados.widthProperty()).divide(2)
+            caixaSecundaria.widthProperty().divide(2).subtract(botaoEnviarDados.widthProperty()).subtract(10)
         );
 
+        // Botão Manual: Fica ligeiramente deslocado para a direita do centro
+        botaoControlarCiclos.layoutXProperty().bind(
+            caixaSecundaria.widthProperty().divide(2).add(10)
+        );
+
+        // Ambos ficam na mesma altura vertical (20px abaixo da caixa de texto)
         botaoEnviarDados.layoutYProperty().bind(
-            instrucoes.layoutYProperty()
-                .add(instrucoes.heightProperty())
-                .add(20)
+            instrucoes.layoutYProperty().add(instrucoes.heightProperty()).add(20)
+        );
+        botaoControlarCiclos.layoutYProperty().bind(
+            instrucoes.layoutYProperty().add(instrucoes.heightProperty()).add(20)
         );
 
+        // Ajusta o fundo do painel para englobar os botões
         caixaSecundaria.prefHeightProperty().bind(
             instrucoes.layoutYProperty()       
                     .add(instrucoes.heightProperty()) 

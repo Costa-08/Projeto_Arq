@@ -145,7 +145,6 @@ public class Mic1 {
 
     public void preparaMemoria(String[] arrayInstrucoes) {
         
-        
         this.assembler.setCodigoUsuario(arrayInstrucoes);
 
         String statusCompilacao = this.assembler.compilar();
