@@ -13,11 +13,25 @@
     -fx-background-radius: 5px;
 }
 
+/* Estilo do Título MIC 1 - Acima */
 #Titulo {
-    -fx-text-fill: gray;
-    -fx-font-weight: bold;
+    -fx-text-fill: #595959; /* Um cinza escuro marcante */
+    -fx-font-weight: bold; /* Letra gordinha */
+    -fx-font-size: 44px;
+    -fx-text-alignment: center; /* Centraliza o texto dentro do Label */
+    -fx-padding: 20 0 10 0; /* Adiciona espaçamento vertical para centralizar melhor no container */
+}
 
-    -fx-font-size: 40px;
+/* Estilo do texto descritivo - CENTRALIZADO E CABENDO TODO O TEXTO */
+#instrucoesTexto {
+    -fx-text-fill: #8c8c8c;
+    -fx-font-size: 12px;
+    -fx-font-weight: normal;
+    -fx-line-spacing: 3px;  
+    
+    -fx-text-alignment: left;  
+    -fx-wrap-text: true;       
+    -fx-pref-width: 320px;     
 }
 
 #instrucoes *.text {

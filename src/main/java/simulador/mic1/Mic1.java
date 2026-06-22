@@ -83,6 +83,8 @@ public class Mic1 {
     private Incrementador inc;
     private Assembler assembler;
 
+    private boolean forcarParada = false;
+
     public Mic1 () {
 
         this.memP = new MemoriaPrincipal();
@@ -145,6 +147,10 @@ public class Mic1 {
 
     }
 
+    public void abortarProcesso() {
+        this.forcarParada = true;
+    }
+
     public boolean preparaMemoria(String[] arrayInstrucoes) {
         
         this.assembler.setCodigoUsuario(arrayInstrucoes);
@@ -176,6 +182,9 @@ public class Mic1 {
     }
 
     public boolean acabou() {
+        if (this.forcarParada) {
+            return true; 
+        }
         return this.registradores[0].getValor() == this.numMacroinstrucoes + 1;
     }
 
@@ -189,6 +198,13 @@ public class Mic1 {
 
     public int getValorMBR() {
         return this.mbr.getValorMBR();
+    }
+
+    public String getStatusCache() {
+        if (this.cache != null) {
+            return this.cache.getStatusCache();
+        }
+        return "";
     }
 
     public void ciclo(){

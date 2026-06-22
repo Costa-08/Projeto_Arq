@@ -40,7 +40,7 @@ public class SimulacaoMicrocodigo {
         
         listaElementos.clear(); 
         for (int i = 0; i < 16; i++) {
-            listaElementos.add(new LinhaTabela("Registrador [" + nomesRegs[i] + "]", "0"));
+            listaElementos.add(new LinhaTabela("[" + nomesRegs[i] + "]", "0"));
         }
         listaElementos.add(new LinhaTabela("MAR", "0"));
         listaElementos.add(new LinhaTabela("MBR", "0"));
@@ -48,6 +48,7 @@ public class SimulacaoMicrocodigo {
     }
 
     public void exibir() {
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/nanoprocessos.fxml"));
             loader.setController(this);
@@ -56,7 +57,15 @@ public class SimulacaoMicrocodigo {
             Stage novoPalco = new Stage();
             novoPalco.setTitle("Simulação do Microcódigo");
             novoPalco.setScene(cena);
+            
+            novoPalco.setOnCloseRequest(evento -> {
+                if (motorSimulador != null) {
+                    motorSimulador.abortarProcesso(); 
+                }
+            });
+
             novoPalco.show(); 
+
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Erro ao carregar a tela de Microcódigo.");
@@ -114,18 +123,17 @@ public class SimulacaoMicrocodigo {
 
         // PRINTA A INFORMAÇÃO REAL DO PROCESSADOR NO LOG LATERAL
         if (logMicroinstrucoes != null) {
-            int pcAtual = motor.getValorReg(0); 
-            int mbrAtual = motor.getValorMBR(); 
-            //String statusCache = motor.getStatusCache(); // Puxa o aviso da cache
             
             // Monta o texto base do ciclo
             StringBuilder logTexto = new StringBuilder();
-            logTexto.append(String.format("Ciclo %d: %s \n PC: %d | MBR: %d\n", contadorCiclos, motorSimulador.stringMMI(), pcAtual, mbrAtual));
+            logTexto.append(String.format("Ciclo %d: %s \n", contadorCiclos, motorSimulador.stringMMI()));
             
+            String statusCache = motor.getStatusCache();
+
             // Se a cache trabalhou neste ciclo, adiciona no painel!
-            // if (statusCache != null && !statusCache.isEmpty()) {
-            //     logTexto.append(" | CACHE: ").append(statusCache);
-            // }
+            if (statusCache != null && !statusCache.isEmpty()) {
+                logTexto.append("CACHE: ").append(statusCache).append("\n");
+            }
             
             logTexto.append("\n"); // Pula de linha no final
             
