@@ -1,38 +1,123 @@
+/* Fundo principal da página */
 #PaginaMicroinstrucoes {
     -fx-background-color: rgb(233, 229, 229);
-    -fx-padding: 30px;
-    -fx-alignment: center;
-    -fx-spacing: 100px;
 }
 
+/* Título / Relógio no topo */
 #cicloClock {
-    -fx-text-fill: white;
-    -fx-prompt-text-fill: white;
+    -fx-text-fill: gray;
     -fx-font-weight: bold;
-    -fx-font-size: 20px;
-
-    -fx-background-color: rgb(162, 160, 160);
-    -fx-border-color: gray;
-    -fx-border-width: 0.2px;
-
-    /* Arredonda a cor de fundo */
-    -fx-background-radius: 10px;
-
-    /* Arredonda a linha da borda para acompanhar o fundo */
-    -fx-border-radius: 5px;
+    -fx-font-size: 24px;
 }
 
-#tabelaDados {
-    -fx-text-fill: white;
-    -fx-prompt-text-fill: white;
+/* Estilo geral para labels menores (ex: "Log de Microinstruções:") */
+.label {
+    -fx-text-fill: gray;
     -fx-font-weight: bold;
-    -fx-font-size: 20px;
+    -fx-font-size: 16px;
+}
+
+/* --- ÁREA DE TEXTO DO LOG --- */
+#logMicroinstrucoes {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
 
     -fx-background-color: rgb(162, 160, 160);
     -fx-border-color: gray;
     -fx-border-width: 0.2px;
 
     -fx-background-radius: 5px;
-
     -fx-border-radius: 5px;
+}
+
+/* Remove o fundo branco e a borda da barra de rolagem interna */
+#logMicroinstrucoes .scroll-pane,
+#logMicroinstrucoes .scroll-pane .viewport,
+#logMicroinstrucoes .scroll-pane .content {
+    -fx-background-color: transparent;
+}
+
+/* --- BOTÕES --- */
+#botaoAvancar, #botaoVoltar {
+    -fx-background-color: rgb(162, 160, 160);
+    -fx-border-color: gray;
+    -fx-border-width: 0.2px;
+
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+
+    -fx-transition: 0.3s;
+}
+
+#botaoAvancar:hover, #botaoVoltar:hover {
+    -fx-background-color: rgb(142, 140, 140);
+}
+
+#botaoAvancar:pressed, #botaoVoltar:pressed {
+    -fx-background-color: rgb(122, 120, 120);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* --- TABELA DE DADOS (TableView) --- */
+#tabelaDados {
+    -fx-background-color: rgb(162, 160, 160);
+    -fx-border-color: gray;
+    -fx-border-width: 0.2px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
+
+/* Cabeçalho da Tabela */
+#tabelaDados .column-header-background {
+    -fx-background-color: rgb(142, 140, 140);
+    -fx-background-radius: 5px 5px 0 0;
+}
+
+#tabelaDados .column-header {
+    -fx-background-color: transparent;
+}
+
+#tabelaDados .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-alignment: center;
+}
+
+/* Linhas com dados preenchidos */
+#tabelaDados .table-row-cell {
+    -fx-background-color: rgb(162, 160, 160);
+    -fx-border-color: transparent transparent rgb(142, 140, 140) transparent;
+    -fx-border-width: 1px;
+    -fx-cell-size: 24px;
+}
+
+/* Oculta linhas vazias no final da tabela */
+#tabelaDados .viewport {
+    -fx-background-color: rgb(233, 229, 229);
+}
+
+/* Garante que qualquer linha vazia gerada pelo JavaFX fique invisível e da cor da tela */
+#tabelaDados .table-row-cell:empty {
+    -fx-background-color: rgb(233, 229, 229);
+    -fx-border-color: transparent;
+}
+
+/* Células individuais */
+#tabelaDados .table-cell {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+/* Destaque quando o usuário clicar em uma linha */
+#tabelaDados .table-row-cell:selected {
+    -fx-background-color: rgb(122, 120, 120);
 }

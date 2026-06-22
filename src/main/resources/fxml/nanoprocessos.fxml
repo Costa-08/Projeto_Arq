@@ -16,18 +16,25 @@
    <children>
       <Label fx:id="cicloClock" layoutX="50.0" layoutY="14.0" prefHeight="25.0" prefWidth="450.0" />
       
-      <TableView fx:id="tabelaDados" layoutX="50.0" layoutY="50.0" prefHeight="500.0" prefWidth="450.0">
+      <TableView fx:id="tabelaDados" layoutX="50.0" layoutY="50.0" prefHeight="525.0" prefWidth="450.0">
+        
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
+        
         <columns>
-          <TableColumn fx:id="colunaNome" prefWidth="225.0" text="Registrador / Componente" />
-          <TableColumn fx:id="colunaValor" prefWidth="225.0" text="Valor Atual" />
+          <TableColumn fx:id="colunaNome" text="Registrador / Componente" />
+          <TableColumn fx:id="colunaValor" text="Valor Atual" />
         </columns>
       </TableView>
 
       <Button fx:id="botaoAvancar" layoutX="520.0" layoutY="50.0" prefWidth="250.0" prefHeight="40.0" text="Avançar 1 Ciclo" visible="false" onAction="#avancarCicloManual" />
 
       <Button fx:id="botaoVoltar" layoutX="520.0" layoutY="100.0" prefWidth="250.0" prefHeight="40.0" text="Rodar outro código" visible="false" onAction="#voltarTelaInicial" />
-
-      <Label layoutX="520.0" layoutY="160.0" text="Log de Microinstruções:" />
+      
+      <Label layoutX="520.0" layoutY="160.0" text="LOG DE MICROINSTRUCOES:" />
       <TextArea fx:id="logMicroinstrucoes" layoutX="520.0" layoutY="185.0" prefWidth="250.0" prefHeight="365.0" editable="false" wrapText="true" />
+      
+   
    </children>
 </AnchorPane>

@@ -119,7 +119,7 @@ public class SimulacaoMicrocodigo {
             
             // Monta o texto base do ciclo
             StringBuilder logTexto = new StringBuilder();
-            logTexto.append(String.format("Ciclo %d -> PC: %d | MBR: %d", contadorCiclos, pcAtual, mbrAtual));
+            logTexto.append(String.format("Ciclo %d:\n PC: %d | MBR: %d\n", contadorCiclos, pcAtual, mbrAtual));
             
             // Se a cache trabalhou neste ciclo, adiciona no painel!
             // if (statusCache != null && !statusCache.isEmpty()) {

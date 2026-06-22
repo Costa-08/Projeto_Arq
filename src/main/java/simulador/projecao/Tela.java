@@ -29,25 +29,19 @@ public class Tela extends Application {
     private Pane caixaSecundaria;
 
     @FXML
-    private TextField quantidadeInstrucoes;
-
-    @FXML
     private TextArea instrucoes;
 
     @FXML
     private Button botaoEnviarDados;
 
     @FXML
-    private Button botaoControlarCiclos; // O SEGUNDO BOTÃO ADICIONADO AQUI
+    private Button botaoControlarCiclos; 
 
-    // --- MODO AUTOMÁTICO ---
-    // --- MODO AUTOMÁTICO ---
     @FXML
     private void enviarDados() {
-        String quantidadeInstrucoesText = this.quantidadeInstrucoes.getText();
         String instrucoesText = this.instrucoes.getText().trim();
 
-        if (quantidadeInstrucoesText != null && !quantidadeInstrucoesText.isEmpty() && !instrucoesText.isEmpty()) {
+        if (!instrucoesText.isEmpty()) {
             String[] arrayInstrucoes = instrucoesText.split("\\R");
 
             // O SEGREDO: Cria um processador e uma tela novos e limpos a cada clique!
@@ -77,16 +71,19 @@ public class Tela extends Application {
 
             relogioCentral.setCycleCount(javafx.animation.Animation.INDEFINITE);
             relogioCentral.play(); 
+        } else {
+            // SE A CAIXA ESTIVER VAZIA: Muda o texto de fundo e a cor para vermelho
+            this.instrucoes.setStyle("-fx-prompt-text-fill: red;");
+            this.instrucoes.setPromptText("digite alguma coisa");
         }
     }
 
     // --- MODO MANUAL ---
     @FXML
     private void enviarDadosManual() {
-        String quantidadeInstrucoesText = this.quantidadeInstrucoes.getText();
         String instrucoesText = this.instrucoes.getText().trim();
 
-        if (quantidadeInstrucoesText != null && !quantidadeInstrucoesText.isEmpty() && !instrucoesText.isEmpty()) {
+        if (!instrucoesText.isEmpty()) {
             String[] arrayInstrucoes = instrucoesText.split("\\R");
 
             if (relogioCentral != null) {
@@ -100,6 +97,10 @@ public class Tela extends Application {
             this.mic1.preparaMemoria(arrayInstrucoes);
             this.microcodigo.exibir();
             this.microcodigo.configurarModo(true, this.mic1);
+        } else {
+            // SE A CAIXA ESTIVER VAZIA: Muda o texto de fundo e a cor para vermelho
+            this.instrucoes.setStyle("-fx-prompt-text-fill: red;");
+            this.instrucoes.setPromptText("digite alguma coisa");
         }
     }
 
@@ -112,53 +113,6 @@ public class Tela extends Application {
             }
             return null; 
         };
-
-        quantidadeInstrucoes.setTextFormatter(new TextFormatter<>(filtroNumeroQuatidade));
-
-        quantidadeInstrucoes.layoutXProperty().bind(
-            caixaSecundaria.widthProperty()
-            .subtract(quantidadeInstrucoes.widthProperty())
-            .divide(2)
-        );
-
-        quantidadeInstrucoes.setLayoutY(30);
-
-        instrucoes.layoutXProperty().bind(
-            caixaSecundaria.widthProperty().subtract(instrucoes.widthProperty()).divide(2)
-        );
-
-        instrucoes.layoutYProperty().bind(
-            quantidadeInstrucoes.layoutYProperty()       
-                                .add(quantidadeInstrucoes.heightProperty()) 
-                                .add(20)                 
-        );
-
-        // Botão Automático: Fica ligeiramente deslocado para a esquerda do centro
-        botaoEnviarDados.layoutXProperty().bind(
-            caixaSecundaria.widthProperty().divide(2).subtract(botaoEnviarDados.widthProperty()).subtract(10)
-        );
-
-        // Botão Manual: Fica ligeiramente deslocado para a direita do centro
-        botaoControlarCiclos.layoutXProperty().bind(
-            caixaSecundaria.widthProperty().divide(2).add(10)
-        );
-
-        // Ambos ficam na mesma altura vertical (20px abaixo da caixa de texto)
-        botaoEnviarDados.layoutYProperty().bind(
-            instrucoes.layoutYProperty().add(instrucoes.heightProperty()).add(20)
-        );
-        botaoControlarCiclos.layoutYProperty().bind(
-            instrucoes.layoutYProperty().add(instrucoes.heightProperty()).add(20)
-        );
-
-        // Ajusta o fundo do painel para englobar os botões
-        caixaSecundaria.prefHeightProperty().bind(
-            instrucoes.layoutYProperty()       
-                    .add(instrucoes.heightProperty()) 
-                    .add(botaoEnviarDados.heightProperty()) 
-                    .add(30)                 
-        );
-
     }
 
     @Override
