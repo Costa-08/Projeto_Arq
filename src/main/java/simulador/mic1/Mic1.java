@@ -74,6 +74,7 @@ public class Mic1 {
 
     private RegistradorMicroinstrucao mir;
     private ControlStore microMemoria;
+    private MostraMicroInst mmi;
     private ContadorMicroPrograma mpc;
     private MicroMultiplexador mmux;
 
@@ -119,6 +120,7 @@ public class Mic1 {
 
         this.mir = new RegistradorMicroinstrucao(this.decA, this.decB, this.decC, this.mar, this.mbr, this.shifter, this.ULA, this.Amux);
         this.microMemoria = new ControlStore(this.mir);
+        this.mmi = new MostraMicroInst(microMemoria);
 
         this.mpc = new ContadorMicroPrograma(this.microMemoria);
         this.mmux = new MicroMultiplexador(this.mpc);
@@ -194,14 +196,16 @@ public class Mic1 {
         Subciclo 1, mir recebe seus bits e os sinais de controle são enviados para todos os 
         componentes devidos, e os dados dos registradores selecionados vão para os barramentos A e B
         */
-
-        // System.out.println("\n\n");
-        // printRegs(registradores, mar, mbr);
-        // mar.printValorMAR();
-        // mbr.printValorMBR();
-        // System.out.println("\n\n"); //debug
-
+        /*
+        System.out.println("Microinstrução: "+ mmi.getMicroInst());
+        printRegs(registradores, mar, mbr);
+        System.out.println("\n\n"); //debug
+        */
         //System.out.println("Valor do PC: " + registradores[0].getValor() + "\n");
+
+        for (int i = 0; i<10; i++){
+            memP.printValoremX(i);
+        }
 
         this.mpc.recebeClock();
         // mir.printValorMicroinst();//debug            
@@ -230,12 +234,15 @@ public class Mic1 {
 
     private void printRegs(Registrador[] registradores, RegistradorEnderecoMemoria mar, RegistradorBufferMemoria mbr){
         
-        int []valores = new int[16];
         for (int i=0; i<16; i++){
             System.out.printf("Valor no registrador[%d]: %d \n", i, registradores[i].getValor());
         }
-        //this.mar.getValorMAR();
-        //this.mbr.printValorMBR();
+        System.out.println("Valor do mar: "+ mar.getValorMAR());
+        System.out.println("Valor do mbr: "+ mbr.getValorMBR());
+    }
+
+    public String stringMMI(){
+        return this.mmi.getMicroInst();
     }
 
 }

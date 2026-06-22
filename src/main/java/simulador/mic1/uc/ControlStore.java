@@ -9,6 +9,7 @@ import simulador.mic1.vd.RegistradorMicroinstrucao;
 public class ControlStore {
     private final long[] lista = new long[256];
     private final RegistradorMicroinstrucao mir;
+    private int valor;
 
     public ControlStore(RegistradorMicroinstrucao mir){
         
@@ -32,7 +33,12 @@ public class ControlStore {
     }
 
     public void recebeMPC(int valor){
+        this.valor=valor;
         enviaSinalMIR(lista[valor]);
+    }
+
+    public int getValor(){
+        return this.valor;
     }
 
     private void enviaSinalMIR(long microinst){

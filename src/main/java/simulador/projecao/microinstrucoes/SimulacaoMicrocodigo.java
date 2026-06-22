@@ -6,11 +6,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
@@ -34,12 +33,14 @@ public class SimulacaoMicrocodigo {
 
     @FXML
     public void initialize() {
+        String [] nomesRegs = "PC AC SP IR TIR 0 +1 -1 AMASK SMASK A B C D E F".split(" ");
+
         colunaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colunaValor.setCellValueFactory(new PropertyValueFactory<>("valor"));
         
         listaElementos.clear(); 
         for (int i = 0; i < 16; i++) {
-            listaElementos.add(new LinhaTabela("Registrador [" + i + "]", "0"));
+            listaElementos.add(new LinhaTabela("Registrador [" + nomesRegs[i] + "]", "0"));
         }
         listaElementos.add(new LinhaTabela("MAR", "0"));
         listaElementos.add(new LinhaTabela("MBR", "0"));
@@ -119,7 +120,7 @@ public class SimulacaoMicrocodigo {
             
             // Monta o texto base do ciclo
             StringBuilder logTexto = new StringBuilder();
-            logTexto.append(String.format("Ciclo %d:\n PC: %d | MBR: %d\n", contadorCiclos, pcAtual, mbrAtual));
+            logTexto.append(String.format("Ciclo %d: %s \n PC: %d | MBR: %d\n", contadorCiclos, motorSimulador.stringMMI(), pcAtual, mbrAtual));
             
             // Se a cache trabalhou neste ciclo, adiciona no painel!
             // if (statusCache != null && !statusCache.isEmpty()) {
