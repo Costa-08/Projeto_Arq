@@ -161,9 +161,9 @@ public class Mic1 {
 
         this.printRegs(registradores, mar, mbr);
 
-        if (numMacroinstrucoes <= 2000){
+        if (macroInstrucoes.size() <= 2000){
 
-            for (int i = 0; i < numMacroinstrucoes; i++){
+            for (int i = 0; i < macroInstrucoes.size(); i++){
                 this.memP.preencheMP(i, macroInstrucoes.get(i));
             }
             
@@ -203,9 +203,6 @@ public class Mic1 {
         */
         //System.out.println("Valor do PC: " + registradores[0].getValor() + "\n");
 
-        for (int i = 0; i<10; i++){
-            memP.printValoremX(i);
-        }
 
         this.mpc.recebeClock();
         // mir.printValorMicroinst();//debug            
