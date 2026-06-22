@@ -109,7 +109,6 @@ public class Tela extends Application {
         }
     }
 
-    // --- MODO MANUAL ---
     @FXML
     private void enviarDadosManual() {
         String instrucoesText = this.instrucoes.getText().trim();
@@ -120,32 +119,21 @@ public class Tela extends Application {
             this.mic1 = new Mic1();
             this.microcodigo = new SimulacaoMicrocodigo();
 
-            // AQUI ESTÁ O SEGREDO: Testamos o retorno da Mic1
             boolean compilouCerto = this.mic1.preparaMemoria(arrayInstrucoes);
 
             if (compilouCerto) {
-                // SÓ ABRE A TELA SE ESTIVER TUDO CERTO
-                this.microcodigo.exibir();
-                this.microcodigo.configurarModo(false, this.mic1);
-
+                // PARA O RELÓGIO CASO ELE ESTIVESSE RODANDO NO AUTOMÁTICO
                 if (relogioCentral != null) {
                     relogioCentral.stop();
                 }
 
-                relogioCentral = new javafx.animation.Timeline(
-                    new javafx.animation.KeyFrame(javafx.util.Duration.millis(500), evento -> {
-                    if (!this.mic1.acabou()) {
-                        this.mic1.ciclo(); 
-                        this.microcodigo.atualizarTabela(this.mic1); 
-                    } else {
-                        System.out.println("Simulação concluída!");
-                        relogioCentral.stop(); 
-                        this.microcodigo.finalizarSimulacao(); 
-                    }
-                }));
+                // ABRE A TELA E PASSA 'TRUE' PARA ATIVAR O MODO MANUAL
+                this.microcodigo.exibir();
+                this.microcodigo.configurarModo(true, this.mic1);
 
-                relogioCentral.setCycleCount(javafx.animation.Animation.INDEFINITE);
-                relogioCentral.play(); 
+                // IMPORTANTE: Não recriamos o Timeline aqui. Quem vai avançar os ciclos 
+                // agora é o botão "Avançar 1 Ciclo" lá da outra tela.
+
             } else {
                 String codigoErrado = this.instrucoes.getText(); 
                 this.instrucoes.setText(""); 
@@ -162,16 +150,17 @@ public class Tela extends Application {
                 temporizadorErro.play();
             }
         } else {
+            // AVISO DE CAIXA VAZIA
             this.instrucoes.setStyle("-fx-prompt-text-fill: white; -fx-font-size: 15px; -fx-transition: 0.5s;");
+            this.instrucoes.setPromptText("digite alguma coisa"); // Isso tinha sumido no seu arquivo!
 
             javafx.animation.PauseTransition temporizador = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(2));
             
             temporizador.setOnFinished(evento -> {
-                this.instrucoes.setStyle(""); // Apaga o estilo vermelho/grande para o CSS original voltar
+                this.instrucoes.setStyle(""); 
                 this.instrucoes.setPromptText("Digite aqui as instruções");
             });
             
-            // 4. Dá o "play" no cronômetro
             temporizador.play();
         }
     }
