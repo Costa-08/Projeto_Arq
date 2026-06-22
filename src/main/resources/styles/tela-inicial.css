@@ -20,28 +20,15 @@
     -fx-font-size: 40px;
 }
 
-#quantidadeInstrucoes {
-    -fx-text-fill: white;
-    -fx-prompt-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 20px;
-
-    -fx-background-color: rgb(162, 160, 160);
-    -fx-border-color: gray;
-    -fx-border-width: 0.2px;
-
-    /* Arredonda a cor de fundo */
-    -fx-background-radius: 10px;
-
-    /* Arredonda a linha da borda para acompanhar o fundo */
-    -fx-border-radius: 5px;
+#instrucoes *.text {
+    -fx-text-alignment: center;
 }
 
 #instrucoes {
     -fx-text-fill: white;
     -fx-prompt-text-fill: white;
     -fx-font-weight: bold;
-    -fx-font-size: 20px;
+    -fx-font-size: 14px;
 
     -fx-background-color: rgb(162, 160, 160);
     -fx-border-color: gray;
@@ -52,7 +39,7 @@
     -fx-border-radius: 5px;
 }
 
-#botaoEnviarDados {
+#botaoEnviarDados, #botaoControlarCiclos {
     -fx-background-color: rgb(162, 160, 160);
     -fx-border-color: gray;
     -fx-border-width: 0.2px;
@@ -66,11 +53,11 @@
     -fx-transition: 0.3s;
 }
 
-#botaoEnviarDados:hover {
+#botaoEnviarDados:hover, #botaoControlarCiclos:hover {
     -fx-background-color: rgb(142, 140, 140);
 }
 
-#botaoEnviarDados:pressed {
+#botaoEnviarDados:pressed, #botaoControlarCiclos:pressed {
     -fx-background-color: rgb(122, 120, 120);
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;

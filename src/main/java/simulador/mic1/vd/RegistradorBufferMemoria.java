@@ -66,7 +66,7 @@ public class RegistradorBufferMemoria {
 
     }
 
-    public void printValorMBR(){
-        System.out.println("Valor MBR:"+this.valor);
+    public int getValorMBR() {
+        return this.valor;
     }
 }

@@ -20,15 +20,33 @@ Registradores:
 
 */
 
-import java.util.Scanner;
+import java.util.ArrayList;
 
-import simulador.mic1.memoria.*;
-import simulador.mic1.uc.*;
-import simulador.mic1.vd.*;
+import simulador.mic1.memoria.CacheL1;
+import simulador.mic1.memoria.MemoriaPrincipal;
+import simulador.mic1.uc.ContadorMicroPrograma;
+import simulador.mic1.uc.ControlStore;
+import simulador.mic1.uc.Incrementador;
+import simulador.mic1.uc.LogicaMicroSequencia;
+import simulador.mic1.uc.MicroMultiplexador;
+import simulador.mic1.vd.Amultiplexador;
+import simulador.mic1.vd.Barramento;
+import simulador.mic1.vd.Decodificador;
+import simulador.mic1.vd.LatchA;
+import simulador.mic1.vd.LatchB;
+import simulador.mic1.vd.Registrador;
+import simulador.mic1.vd.RegistradorBufferMemoria;
+import simulador.mic1.vd.RegistradorEnderecoMemoria;
+import simulador.mic1.vd.RegistradorMicroinstrucao;
+import simulador.mic1.vd.Shifter;
+import simulador.mic1.vd.UnidadeLogicoAritmetica;
 
 public class Mic1 {
 
     @SuppressWarnings("ConvertToTryWithResources")
+
+    int clock = 1;
+    int numMacroinstrucoes;
     
     private MemoriaPrincipal memP;
     private CacheL1 cache;
@@ -62,6 +80,7 @@ public class Mic1 {
     private LogicaMicroSequencia logMicroSequencia;
 
     private Incrementador inc;
+    private Assembler assembler;
 
     public Mic1 () {
 
@@ -120,34 +139,56 @@ public class Mic1 {
 
         this.mpc.setIncrementador(this.inc);
 
+        this.assembler = new Assembler();
+
     }
 
-    public void simular(int numMacroinstrucoes, String[] microinstrucao) {
+    public void preparaMemoria(String[] arrayInstrucoes) {
+        
+        this.assembler.setCodigoUsuario(arrayInstrucoes);
+
+        String statusCompilacao = this.assembler.compilar();
+        
+        if (!statusCompilacao.equals("CERTO")) {
+            System.err.println("Erro na compilação: " + statusCompilacao);
+            return;
+        }
+        
+        ArrayList<Integer> macroInstrucoes = assembler.getMacroInstrucoes();
+        this.numMacroinstrucoes = assembler.getPosHalt();
 
         this.printRegs(registradores, mar, mbr);
 
         if (numMacroinstrucoes <= 2000){
 
             for (int i = 0; i < numMacroinstrucoes; i++){
-                int microinstrucaoreal = Integer.parseInt(microinstrucao[i], 2);
-                this.memP.preencheMP(i, microinstrucaoreal);
+                this.memP.preencheMP(i, macroInstrucoes.get(i));
 
             }
+            
         }else{
             System.out.println("Macroinstruções demais para a memória principal");
         }
 
-        while ((this.registradores[0].getValor() != numMacroinstrucoes + 1)){
-            this.ciclo();
-        }
-
-        // printar resultados e estados para verificação
-        this.printRegs(registradores, mar, mbr);
-
-        System.out.println("Sai do loop");
     }
 
-    private void ciclo (){
+    public boolean acabou() {
+        return this.registradores[0].getValor() == this.numMacroinstrucoes + 1;
+    }
+
+    public int getValorReg(int indice) {
+        return this.registradores[indice].getValor();
+    }
+
+    public int getValorMAR() { 
+        return this.mar.getValorMAR();
+    }
+
+    public int getValorMBR() {
+        return this.mbr.getValorMBR();
+    }
+
+    public void ciclo(){
         /*
         Subciclo 1, mir recebe seus bits e os sinais de controle são enviados para todos os 
         componentes devidos, e os dados dos registradores selecionados vão para os barramentos A e B
@@ -187,12 +228,13 @@ public class Mic1 {
 
 
     private void printRegs(Registrador[] registradores, RegistradorEnderecoMemoria mar, RegistradorBufferMemoria mbr){
-        // Para analisar a situação do código
+        
+        int []valores = new int[16];
         for (int i=0; i<16; i++){
             System.out.printf("Valor no registrador[%d]: %d \n", i, registradores[i].getValor());
         }
-        this.mar.printValorMAR();
-        this.mbr.printValorMBR();
+        //this.mar.getValorMAR();
+        //this.mbr.printValorMBR();
     }
 
 }

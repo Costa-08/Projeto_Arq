@@ -15,16 +15,18 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import simulador.projecao.microinstrucoes.SimulacaoMicrocodigo;
 
 public class Tela extends Application {
 
     private Mic1 mic1 = new Mic1();
+    private SimulacaoMicrocodigo microcodigo = new SimulacaoMicrocodigo();
+    
+    // O RELÓGIO FOI MOVIDO PARA AQUI PARA PODER SER PARADO!
+    private javafx.animation.Timeline relogioCentral;
 
     @FXML
     private Pane caixaSecundaria;
-
-    @FXML
-    private TextField quantidadeInstrucoes;
 
     @FXML
     private TextArea instrucoes;
@@ -33,14 +35,72 @@ public class Tela extends Application {
     private Button botaoEnviarDados;
 
     @FXML
-    private void enviarDados() {
-        String quantidadeInstrucoes = this.quantidadeInstrucoes.getText();
-        int quantidade = Integer.parseInt(quantidadeInstrucoes);
-        String instrucoes = this.instrucoes.getText().trim();
-        String[] arrayInstrucoes = instrucoes.split("\\R");
+    private Button botaoControlarCiclos; 
 
-        if (quantidade > 0 && !instrucoes.isEmpty()) {
-            this.mic1.simular(quantidade, arrayInstrucoes);
+    @FXML
+    private void enviarDados() {
+        String instrucoesText = this.instrucoes.getText().trim();
+
+        if (!instrucoesText.isEmpty()) {
+            String[] arrayInstrucoes = instrucoesText.split("\\R");
+
+            // O SEGREDO: Cria um processador e uma tela novos e limpos a cada clique!
+            this.mic1 = new Mic1();
+            this.microcodigo = new SimulacaoMicrocodigo();
+
+            this.mic1.preparaMemoria(arrayInstrucoes);
+            this.microcodigo.exibir();
+            this.microcodigo.configurarModo(false, this.mic1);
+
+            if (relogioCentral != null) {
+                relogioCentral.stop();
+            }
+
+            relogioCentral = new javafx.animation.Timeline(
+                new javafx.animation.KeyFrame(javafx.util.Duration.millis(500), evento -> {
+                
+                if (!this.mic1.acabou()) {
+                    this.mic1.ciclo(); 
+                    this.microcodigo.atualizarTabela(this.mic1); 
+                } else {
+                    System.out.println("Simulação concluída!");
+                    relogioCentral.stop(); 
+                    this.microcodigo.finalizarSimulacao(); 
+                }
+            }));
+
+            relogioCentral.setCycleCount(javafx.animation.Animation.INDEFINITE);
+            relogioCentral.play(); 
+        } else {
+            // SE A CAIXA ESTIVER VAZIA: Muda o texto de fundo e a cor para vermelho
+            this.instrucoes.setStyle("-fx-prompt-text-fill: red;");
+            this.instrucoes.setPromptText("digite alguma coisa");
+        }
+    }
+
+    // --- MODO MANUAL ---
+    @FXML
+    private void enviarDadosManual() {
+        String instrucoesText = this.instrucoes.getText().trim();
+
+        if (!instrucoesText.isEmpty()) {
+            String[] arrayInstrucoes = instrucoesText.split("\\R");
+
+            if (relogioCentral != null) {
+                relogioCentral.stop();
+            }
+
+            // O SEGREDO TAMBÉM AQUI: Zera tudo antes de rodar passo a passo!
+            this.mic1 = new Mic1();
+            this.microcodigo = new SimulacaoMicrocodigo();
+
+            this.mic1.preparaMemoria(arrayInstrucoes);
+            this.microcodigo.exibir();
+            this.microcodigo.configurarModo(true, this.mic1);
+        } else {
+            // SE A CAIXA ESTIVER VAZIA: Muda o texto de fundo e a cor para vermelho
+            this.instrucoes.setStyle("-fx-prompt-text-fill: red;");
+            this.instrucoes.setPromptText("digite alguma coisa");
         }
     }
 
@@ -53,45 +113,6 @@ public class Tela extends Application {
             }
             return null; 
         };
-
-        quantidadeInstrucoes.setTextFormatter(new TextFormatter<>(filtroNumeroQuatidade));
-
-        quantidadeInstrucoes.layoutXProperty().bind(
-            caixaSecundaria.widthProperty()
-            .subtract(quantidadeInstrucoes.widthProperty())
-            .divide(2)
-        );
-
-        quantidadeInstrucoes.setLayoutY(30);
-
-        instrucoes.layoutXProperty().bind(
-            caixaSecundaria.widthProperty().subtract(instrucoes.widthProperty()).divide(2)
-        );
-
-        // AGORA A MÁGICA: O 'Y' do TextArea vai ficar amarrado à base do TextField!
-        instrucoes.layoutYProperty().bind(
-            quantidadeInstrucoes.layoutYProperty()       // Pega a posição Y do de cima
-                                .add(quantidadeInstrucoes.heightProperty()) // Soma com a altura do de cima
-                                .add(20)                 // Adiciona 20 pixels de "margem" entre eles
-        );
-
-        botaoEnviarDados.layoutXProperty().bind(
-            caixaSecundaria.widthProperty().subtract(botaoEnviarDados.widthProperty()).divide(2)
-        );
-
-        botaoEnviarDados.layoutYProperty().bind(
-            instrucoes.layoutYProperty()
-                .add(instrucoes.heightProperty())
-                .add(20)
-        );
-
-        caixaSecundaria.prefHeightProperty().bind(
-            instrucoes.layoutYProperty()       // Pega onde a caixa de baixo começa
-                    .add(instrucoes.heightProperty()) // Soma o tamanho que ela tem
-                    .add(botaoEnviarDados.heightProperty()) // Soma o tamanho do botão
-                    .add(30)                 // Adiciona os 30px de chão
-        );
-
     }
 
     @Override

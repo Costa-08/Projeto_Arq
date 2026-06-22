@@ -30,8 +30,8 @@ public class RegistradorEnderecoMemoria {
         }
     }
 
-    public void printValorMAR(){
-        System.out.println("Valor MAR: "+this.valor);
+    public int getValorMAR(){
+        return this.valor;
     }
 
 }
