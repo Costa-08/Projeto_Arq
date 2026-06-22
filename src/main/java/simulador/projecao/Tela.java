@@ -81,7 +81,7 @@ public class Tela extends Application {
                 
                 // Formata o fundo com a mensagem vermelha
                 this.instrucoes.setStyle("-fx-prompt-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-transition: 0.5s;");
-                this.instrucoes.setPromptText("Seu macrocódigo é inválido!");
+                this.instrucoes.setPromptText("Programa inválido!");
 
                 javafx.animation.PauseTransition temporizadorErro = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(3));
                 temporizadorErro.setOnFinished(eventoErro -> {
@@ -139,7 +139,7 @@ public class Tela extends Application {
                 this.instrucoes.setText(""); 
                 
                 this.instrucoes.setStyle("-fx-prompt-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-transition: 0.5s;");
-                this.instrucoes.setPromptText("Seu macrocódigo é inválido!");
+                this.instrucoes.setPromptText("Programa inválido!");
 
                 javafx.animation.PauseTransition temporizadorErro = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(3));
                 temporizadorErro.setOnFinished(eventoErro -> {

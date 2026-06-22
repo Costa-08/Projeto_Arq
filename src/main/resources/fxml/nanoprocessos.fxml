@@ -23,7 +23,7 @@
         </columnResizePolicy>
         
         <columns>
-          <TableColumn fx:id="colunaNome" text="Registrador / Componente" />
+          <TableColumn fx:id="colunaNome" text="Registradores" />
           <TableColumn fx:id="colunaValor" text="Valor Atual" />
         </columns>
       </TableView>
