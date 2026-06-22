@@ -1,6 +1,5 @@
 package simulador.mic1.vd;
 
-import simulador.mic1.memoria.MemoriaPrincipal;
 import simulador.mic1.memoria.CacheL1;
 
 public class RegistradorEnderecoMemoria {

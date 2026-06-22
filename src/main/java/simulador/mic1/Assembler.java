@@ -78,6 +78,7 @@ public class Assembler {
 
         int endMemoria = 0;
         tabelaEnderecos.clear();
+        String prefixo = "";
         for (String linhaOriginal : this.codigoUsuario) { //tratar inicialmente das labels passo 1
             
             String linhaSemComentario = linhaOriginal.split("//")[0].trim();
@@ -85,12 +86,16 @@ public class Assembler {
             String[] linhaLimpa = linhaSemComentario.replaceAll("\\s+", " ").split(" ");
                         
             int tamanhoLinha = linhaLimpa.length;
+
+            if (tamanhoLinha>=2){
+                if (linhaLimpa[0].equals("HALT") || linhaLimpa[1].equals("HALT")) prefixo+="&";
+            } else if (linhaLimpa[0].equals("HALT")) prefixo+="&";
             
             if (linhaLimpa[0].endsWith(":")){ // tem label
 
                 if (tabelaEnderecos.containsKey(linhaLimpa[0])) return ("label "+linhaLimpa[0]+" repetida"); // label repetida
                 else{
-                    tabelaEnderecos.put(linhaLimpa[0], endMemoria);
+                    tabelaEnderecos.put(prefixo+linhaLimpa[0], endMemoria);
                 }
 
                 if (tamanhoLinha>1){
@@ -106,6 +111,11 @@ public class Assembler {
         ArrayList<Integer> codigo = new ArrayList<>();
 
         for (String linhaOriginal : this.codigoUsuario){ // passo 2
+
+
+            for (String label: tabelaEnderecos.keySet()){
+                System.out.println(label + tabelaEnderecos.get(label));
+            }
 
             String linhaSemComentario = linhaOriginal.split("//")[0].trim();
             if (linhaSemComentario.isEmpty()) continue;
@@ -133,20 +143,23 @@ public class Assembler {
                                     int num = Integer.decode(linhaLimpa[0]);
 
                                     if (num < -32768 || num > 65535){
-                                        return ("Linha "+linhaOriginal+" inválida");
+                                        return ("Linha "+linhaOriginal+" inválida (case1 - if2)");
                                     }
 
                                     codigo.add(num & 0xFFFF);
 
                                 } catch (Exception e) {
-                                    return ("Linha "+linhaOriginal+" inválida");
+                                    return ("Linha "+linhaOriginal+" inválida (case1 - if3)");
                                 }
                             }
                         }
                     }
 
                     case 2 -> {
-                        if (tabelaEnderecos.containsKey(linhaLimpa[0])){ // inicio é label
+
+                        System.out.println("linha limpa 0: "+ linhaLimpa[0]+ " linhalimpa[1]: "+linhaLimpa[1]);
+
+                        if (tabelaEnderecos.containsKey(linhaLimpa[0]) || tabelaEnderecos.containsKey("&"+linhaLimpa[0])){ // inicio é label
                             
                             if (tabelaTraducao.containsKey(linhaLimpa[1])){
                                 int opcode = tabelaTraducao.get(linhaLimpa[1]);
@@ -158,11 +171,11 @@ public class Assembler {
                                 try {
                                     int num = Integer.decode(linhaLimpa[1]);
                                     if (num < -32768 || num > 65535){
-                                        return ("Linha "+linhaOriginal+" inválida");
+                                        return ("Linha "+linhaOriginal+" inválida (case2 - if2)");
                                     }
                                     codigo.add(num & 0xFFFF);
                                 } catch (Exception e) {
-                                    return ("Linha "+linhaOriginal+" inválida");
+                                    return ("Linha "+linhaOriginal+" inválida (case2 - if3)");
                                 }
                             }
                         }
@@ -189,27 +202,27 @@ public class Assembler {
                                         int num = Integer.decode(linhaLimpa[1]);
 
                                         if (num < -2048 || num > 4095){
-                                            return ("Linha "+linhaOriginal+" inválida");
+                                            return ("Linha "+linhaOriginal+" inválida (case2 - if4)");
                                         }
 
                                         resultado = resultado | (num & 0xFFF);
 
                                     } catch (Exception e) {
-                                        return ("Linha "+linhaOriginal+" inválida");
+                                        return ("Linha "+linhaOriginal+" inválida (case2 - if5)");
                                     }
                                 }
 
                                 codigo.add(resultado);
 
 
-                            } else return ("Linha "+linhaOriginal+" inválida");
+                            } else return ("Linha "+linhaOriginal+" inválida (case2 - if6)");
 
                         }
                     }
 
                     case 3 -> {
                         if (!linhaLimpa[0].endsWith(":")) {
-                           return "Linha " + linhaOriginal + " inválida";
+                           return "Linha " + linhaOriginal + " inválida(case3 - if1)";
                         }
                         else{
                             if (tabelaTraducao.containsKey(linhaLimpa[1])){
@@ -237,19 +250,19 @@ public class Assembler {
                                         int num = Integer.decode(linhaLimpa[2]);
 
                                         if (num < -2048 || num > 4095){
-                                            return ("Linha "+linhaOriginal+" inválida");
+                                            return ("Linha "+linhaOriginal+" inválida (case3 - if2)");
                                         }
 
                                         resultado = resultado | (num & 0xFFF);
 
                                     } catch (Exception e) {
-                                        return ("Linha "+linhaOriginal+" inválida");
+                                        return ("Linha "+linhaOriginal+" inválida(case3 - if3)");
                                     }
                                 }
 
                                 codigo.add(resultado);
 
-                            } else return ("Linha "+linhaOriginal+" inválida");
+                            } else return ("Linha "+linhaOriginal+" inválida (case3 - if4)");
                             }
 
                     }
