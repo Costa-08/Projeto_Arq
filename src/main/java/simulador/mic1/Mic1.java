@@ -143,7 +143,7 @@ public class Mic1 {
 
     }
 
-    public void preparaMemoria(String[] arrayInstrucoes) {
+    public boolean preparaMemoria(String[] arrayInstrucoes) {
         
         this.assembler.setCodigoUsuario(arrayInstrucoes);
 
@@ -151,7 +151,7 @@ public class Mic1 {
         
         if (!statusCompilacao.equals("CERTO")) {
             System.err.println("Erro na compilação: " + statusCompilacao);
-            return;
+            return false; // 2. Avisa a Tela que falhou
         }
         
         ArrayList<Integer> macroInstrucoes = assembler.getMacroInstrucoes();
@@ -163,13 +163,14 @@ public class Mic1 {
 
             for (int i = 0; i < numMacroinstrucoes; i++){
                 this.memP.preencheMP(i, macroInstrucoes.get(i));
-
             }
             
         }else{
             System.out.println("Macroinstruções demais para a memória principal");
+            return false; // Avisa a Tela que falhou por falta de espaço
         }
 
+        return true; // 3. Avisa a Tela que tudo deu certo!
     }
 
     public boolean acabou() {

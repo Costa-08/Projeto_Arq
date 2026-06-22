@@ -44,37 +44,68 @@ public class Tela extends Application {
         if (!instrucoesText.isEmpty()) {
             String[] arrayInstrucoes = instrucoesText.split("\\R");
 
-            // O SEGREDO: Cria um processador e uma tela novos e limpos a cada clique!
             this.mic1 = new Mic1();
             this.microcodigo = new SimulacaoMicrocodigo();
 
-            this.mic1.preparaMemoria(arrayInstrucoes);
-            this.microcodigo.exibir();
-            this.microcodigo.configurarModo(false, this.mic1);
+            // AQUI ESTÁ O SEGREDO: Testamos o retorno da Mic1
+            boolean compilouCerto = this.mic1.preparaMemoria(arrayInstrucoes);
 
-            if (relogioCentral != null) {
-                relogioCentral.stop();
-            }
+            if (compilouCerto) {
+                // SÓ ABRE A TELA SE ESTIVER TUDO CERTO
+                this.microcodigo.exibir();
+                this.microcodigo.configurarModo(false, this.mic1);
 
-            relogioCentral = new javafx.animation.Timeline(
-                new javafx.animation.KeyFrame(javafx.util.Duration.millis(500), evento -> {
-                
-                if (!this.mic1.acabou()) {
-                    this.mic1.ciclo(); 
-                    this.microcodigo.atualizarTabela(this.mic1); 
-                } else {
-                    System.out.println("Simulação concluída!");
-                    relogioCentral.stop(); 
-                    this.microcodigo.finalizarSimulacao(); 
+                if (relogioCentral != null) {
+                    relogioCentral.stop();
                 }
-            }));
 
-            relogioCentral.setCycleCount(javafx.animation.Animation.INDEFINITE);
-            relogioCentral.play(); 
+                relogioCentral = new javafx.animation.Timeline(
+                    new javafx.animation.KeyFrame(javafx.util.Duration.millis(500), evento -> {
+                    if (!this.mic1.acabou()) {
+                        this.mic1.ciclo(); 
+                        this.microcodigo.atualizarTabela(this.mic1); 
+                    } else {
+                        System.out.println("Simulação concluída!");
+                        relogioCentral.stop(); 
+                        this.microcodigo.finalizarSimulacao(); 
+                    }
+                }));
+
+                relogioCentral.setCycleCount(javafx.animation.Animation.INDEFINITE);
+                relogioCentral.play(); 
+            } else {
+                // SE DEU ERRO DE COMPILAÇÃO (MACRO CÓDIGO INVÁLIDO):
+                
+                String codigoErrado = this.instrucoes.getText(); // Guarda o que o usuário digitou
+                this.instrucoes.setText(""); // Esvazia a caixa temporariamente
+                
+                // Formata o fundo com a mensagem vermelha
+                this.instrucoes.setStyle("-fx-prompt-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-transition: 0.5s;");
+                this.instrucoes.setPromptText("Seu macrocódigo é inválido!");
+
+                javafx.animation.PauseTransition temporizadorErro = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(3));
+                temporizadorErro.setOnFinished(eventoErro -> {
+                    this.instrucoes.setStyle("");
+                    this.instrucoes.setPromptText("Digite aqui as instruções");
+                    this.instrucoes.setText(codigoErrado); // Devolve o código para o usuário consertar
+                });
+                temporizadorErro.play();
+            }
         } else {
-            // SE A CAIXA ESTIVER VAZIA: Muda o texto de fundo e a cor para vermelho
-            this.instrucoes.setStyle("-fx-prompt-text-fill: red;");
-            this.instrucoes.setPromptText("digite alguma coisa");
+            // 1. Aumenta a fonte, pinta de vermelho e muda o texto
+            this.instrucoes.setStyle("-fx-prompt-text-fill: white; -fx-font-size: 15px; -fx-transition: 0.5s;");
+
+            // 2. Cria um cronômetro de exatos 5 segundos
+            javafx.animation.PauseTransition temporizador = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(2));
+            
+            // 3. Define o que acontece quando os 5 segundos acabarem
+            temporizador.setOnFinished(evento -> {
+                this.instrucoes.setStyle(""); // Apaga o estilo vermelho/grande para o CSS original voltar
+                this.instrucoes.setPromptText("Digite aqui as instruções");
+            });
+            
+            // 4. Dá o "play" no cronômetro
+            temporizador.play();
         }
     }
 
@@ -86,21 +117,62 @@ public class Tela extends Application {
         if (!instrucoesText.isEmpty()) {
             String[] arrayInstrucoes = instrucoesText.split("\\R");
 
-            if (relogioCentral != null) {
-                relogioCentral.stop();
-            }
-
-            // O SEGREDO TAMBÉM AQUI: Zera tudo antes de rodar passo a passo!
             this.mic1 = new Mic1();
             this.microcodigo = new SimulacaoMicrocodigo();
 
-            this.mic1.preparaMemoria(arrayInstrucoes);
-            this.microcodigo.exibir();
-            this.microcodigo.configurarModo(true, this.mic1);
+            // AQUI ESTÁ O SEGREDO: Testamos o retorno da Mic1
+            boolean compilouCerto = this.mic1.preparaMemoria(arrayInstrucoes);
+
+            if (compilouCerto) {
+                // SÓ ABRE A TELA SE ESTIVER TUDO CERTO
+                this.microcodigo.exibir();
+                this.microcodigo.configurarModo(false, this.mic1);
+
+                if (relogioCentral != null) {
+                    relogioCentral.stop();
+                }
+
+                relogioCentral = new javafx.animation.Timeline(
+                    new javafx.animation.KeyFrame(javafx.util.Duration.millis(500), evento -> {
+                    if (!this.mic1.acabou()) {
+                        this.mic1.ciclo(); 
+                        this.microcodigo.atualizarTabela(this.mic1); 
+                    } else {
+                        System.out.println("Simulação concluída!");
+                        relogioCentral.stop(); 
+                        this.microcodigo.finalizarSimulacao(); 
+                    }
+                }));
+
+                relogioCentral.setCycleCount(javafx.animation.Animation.INDEFINITE);
+                relogioCentral.play(); 
+            } else {
+                String codigoErrado = this.instrucoes.getText(); 
+                this.instrucoes.setText(""); 
+                
+                this.instrucoes.setStyle("-fx-prompt-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-transition: 0.5s;");
+                this.instrucoes.setPromptText("Seu macrocódigo é inválido!");
+
+                javafx.animation.PauseTransition temporizadorErro = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(3));
+                temporizadorErro.setOnFinished(eventoErro -> {
+                    this.instrucoes.setStyle("");
+                    this.instrucoes.setPromptText("Digite aqui as instruções");
+                    this.instrucoes.setText(codigoErrado); 
+                });
+                temporizadorErro.play();
+            }
         } else {
-            // SE A CAIXA ESTIVER VAZIA: Muda o texto de fundo e a cor para vermelho
-            this.instrucoes.setStyle("-fx-prompt-text-fill: red;");
-            this.instrucoes.setPromptText("digite alguma coisa");
+            this.instrucoes.setStyle("-fx-prompt-text-fill: white; -fx-font-size: 15px; -fx-transition: 0.5s;");
+
+            javafx.animation.PauseTransition temporizador = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(2));
+            
+            temporizador.setOnFinished(evento -> {
+                this.instrucoes.setStyle(""); // Apaga o estilo vermelho/grande para o CSS original voltar
+                this.instrucoes.setPromptText("Digite aqui as instruções");
+            });
+            
+            // 4. Dá o "play" no cronômetro
+            temporizador.play();
         }
     }
 
