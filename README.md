@@ -11,11 +11,11 @@
 * **Gabriel Costa da Silva**: https://github.com/Costa-08
 * **Gabriel Francisco Bravo**: https://github.com/Gbravo22
 
-## 🚀 Download e Execução
+## Download e Execução 🚀 :
 
 Você pode baixar a versão compilada e pronta para rodar do simulador. O aplicativo já vem com a Máquina Virtual Java embutida, então **não é necessário ter o Java instalado** na sua máquina!
 
-## Windows
+### Windows
 1. Baixe o arquivo zip clicando no link abaixo.
 2. Extraia a pasta e execute o arquivo `Simulador Mic-1.exe`.
 
