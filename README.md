@@ -1,6 +1,6 @@
 ﻿# [ Projeto Arquitetura Computadores ]
 
-> Este projeto usa Java e Mic I para simular um processador
+> Este projeto usa Java para simular a microarquitetura MIC-I, baseada no livro "Organização Estruturada de Computadores", do Andrew S. Tanenbaum. 
 
 ## Tecnologias ⌨️ :
 * **javaFX**
