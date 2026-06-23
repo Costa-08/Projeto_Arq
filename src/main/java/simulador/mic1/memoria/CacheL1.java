@@ -32,11 +32,9 @@ public class CacheL1 {
         int tag = (address >> 6) & 31;
         LinhaCache linha = linhas[index];
         if (linha.valid && linha.tag == tag) {
-            System.out.println("[CACHE] HIT no endereço " + address);
             this.statusAtual = "HIT";
             return linha.data[offset];
         } else {
-            System.out.println("[CACHE] MISS no endereço " + address + ". Carregando bloco...");
             this.statusAtual = "MISS";
             int enderecoBaseBloco = address & ~3;
             for (int i = 0; i < 4; i++) {

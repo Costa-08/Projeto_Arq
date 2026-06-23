@@ -165,7 +165,7 @@ public class Mic1 {
         ArrayList<Integer> macroInstrucoes = assembler.getMacroInstrucoes();
         this.numMacroinstrucoes = assembler.getPosHalt();
 
-        this.printRegs(registradores, mar, mbr);
+        //this.printRegs(registradores, mar, mbr);
 
         if (macroInstrucoes.size() <= 2000){
 

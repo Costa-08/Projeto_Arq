@@ -15,7 +15,7 @@
         
         <VBox prefWidth="300.0" spacing="15.0" alignment="TOP_CENTER">
             <Label id="Titulo" text="MIC 1" />
-            <Label id="instrucoesTexto" text="Escreva seu código na ISA da microarquitetura de MIC-1.&#10;Adicione a instrução HALT para indicar o fim do seu programa.&#10;Coloque os dados que deseja carregar na memória principal após a instrução de Halt.&#10;Segue exemplo:&#10;&#10;LODD &amp;a&#10;label: SUBD &amp;B&#10;JZER label&#10;HALT&#10;a: 3&#10;b: 1" />
+            <Label id="instrucoesTexto" text="Escreva seu código na ISA da microarquitetura de MIC-1.&#10;Adicione a instrução HALT para indicar o fim do seu programa.&#10;Coloque os dados que deseja carregar na memória principal após a instrução de Halt.&#10;Segue exemplo:&#10;&#10;LODD &amp;A&#10;label: SUBD &amp;B&#10;JPOS label&#10;HALT&#10;A: 3&#10;B: 1" />
         </VBox>
 
         <VBox spacing="15.0" alignment="TOP_CENTER" prefWidth="400.0">

@@ -112,11 +112,6 @@ public class Assembler {
 
         for (String linhaOriginal : this.codigoUsuario){ // passo 2
 
-
-            for (String label: tabelaEnderecos.keySet()){
-                System.out.println(label + tabelaEnderecos.get(label));
-            }
-
             String linhaSemComentario = linhaOriginal.split("//")[0].trim();
             if (linhaSemComentario.isEmpty()) continue;
             String[] linhaLimpa = linhaSemComentario.replaceAll("\\s+", " ").split(" ");
@@ -156,8 +151,6 @@ public class Assembler {
                     }
 
                     case 2 -> {
-
-                        System.out.println("linha limpa 0: "+ linhaLimpa[0]+ " linhalimpa[1]: "+linhaLimpa[1]);
 
                         if (tabelaEnderecos.containsKey(linhaLimpa[0]) || tabelaEnderecos.containsKey("&"+linhaLimpa[0])){ // inicio é label
                             
